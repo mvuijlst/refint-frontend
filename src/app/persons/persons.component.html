@@ -1,0 +1,54 @@
+<mat-toolbar>
+  <div>
+    <button mat-button color="primary" (click)="toggleContact()">Contact</button>
+    <button mat-button>Nieuw</button>
+  </div>
+
+  <span flex></span>
+  <div>
+    <mat-checkbox [checked]="onlySelected" (change)="filterSelected($event)" color="primary">
+      <mat-label>Selected</mat-label>
+    </mat-checkbox>
+    &nbsp;
+    <mat-checkbox [checked]="onlyActive" (change)="filterActive($event)" color="primary">
+      <mat-label>Actief</mat-label>
+    </mat-checkbox>
+  </div>
+  <td-search-box backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)" flex></td-search-box>
+  <button mat-icon-button (click)="toggleView()">
+    <mat-icon *ngIf="!gridView">view_list</mat-icon>
+    <mat-icon *ngIf="gridView">grid_on</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-sidenav-container layout-fill>
+  <mat-sidenav mode="over"></mat-sidenav>
+  <mat-sidenav position="end" #endNav mode="side" class="rightContent">
+    <div>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content class="no-sidenav">
+    <td-data-table #dataTable [data]="filteredPersons" [columns]="columns" [selectable]="true" [clickable]="true" [multiple]="true"
+      [sortable]="true" [sortBy]="sortBy" (sortChange)="sort($event)" [(ngModel)]="selectedPersons" [sortOrder]="sortOrder"
+      [style.height.%]="85" (rowClick)="rowCLick($event)" *ngIf="gridView">
+    </td-data-table>
+    <div *ngIf="!gridView">
+      <mat-grid-list [cols]="gridCols" flex rowHeight="2:1" [gutterSize]="5">
+        <mat-grid-tile *ngFor="let person of filteredPersons">
+          <mat-card class="grid-card">
+            <mat-card-title>
+              <mat-checkbox [checked]="checkSelectedRows(person)" (change)="cbxClick($event, person)"></mat-checkbox>
+              {{person.firstName}}
+            </mat-card-title>
+            <mat-card-subtitle>{{person.lastName}}
+            </mat-card-subtitle>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+              <img src="http://www.placehold.it/150x200" alt="Card image cap"> card content
+            </mat-card-content>
+          </mat-card>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

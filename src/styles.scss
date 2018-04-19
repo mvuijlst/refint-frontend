@@ -1,0 +1,43 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import "~@angular/material/prebuilt-themes/indigo-pink.css";  */
+
+
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import 'theme';
+
+// .fixedToolbar {
+//     position: fixed;
+//     top:0px;
+//     margin-bottom: 64px;
+//   }
+.mat-drawer-container{background-color: transparent;}
+mat-sidenav { width:250px; }
+mat-sidenav-content { margin-left:250px;}
+.no-sidenav{margin-left:0px; }
+.rightContent{width:30%;}
+mat-toolbar .mat-icon.mat-icon-logo { height: 60px;width:120px }
+mat-nav-list a[mat-list-item] .mat-list-item-content{    
+    font-size: 1rem;
+    font-weight: 700;
+    color: #7f8c8d;
+}
+mat-nav-list{padding-top:0 !important;}
+mat-nav-list a[mat-list-item]{    
+    :hover{
+        background-color: mat-color($primary);
+        color:mat-color($primary, default-contrast)}
+    }
+    mat-nav-list a[mat-list-item]{    
+        :hover .material-icons{
+            background-color:#fff;
+            color:mat-color($primary);}
+        }
+    
+.logo{margin: 10px 20px;}
+.mat-drawer.mat-drawer-end {
+height:85%}
+
+.mat-checkbox-layout .mat-checkbox-label{
+    font-size:14px !important;
+}
+// .mat-icon-button{font-size: 36px; line-height:36px;}

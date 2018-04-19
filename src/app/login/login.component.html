@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>Login</h1>
+<div mat-dialog-content>
+<form [formGroup]="form">
+  <fieldset>
+      <legend>Login</legend>
+      <div class="form-field">
+          <label>login:</label>
+          <input name="username" formControlName="username">
+      </div>
+      <div class="form-field">
+          <label>Password:</label>
+          <input name="password" formControlName="password" 
+                 type="password">
+      </div>
+  </fieldset>
+  <div class="form-buttons">
+      <button class="button button-primary" 
+              (click)="login()">Login</button>
+        <button (click)="refreshToken()">refresh </button>
+  </div>
+</form>
+</div>

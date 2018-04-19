@@ -1,0 +1,34 @@
+<td-layout-nav layout-fill>
+    <div td-toolbar-content layout="row" layout-align="start center" flex>
+      <button mat-icon-button td-menu-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-icon [routerLink]="['/']" class="mat-icon-logo cursor-pointer" svgIcon="assets:refulogowhite"></mat-icon>
+      <span flex></span>
+      <mat-menu #appMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
+        <button mat-menu-item *ngIf="authService.isAuthenticated()" (click)="logout()">Logout</button>
+        <button mat-menu-item *ngIf="!authService.isAuthenticated()" (click)="login()">Login</button>
+      </mat-menu>
+      <a mat-mini-fab [matMenuTriggerFor]="appMenu">
+        <mat-icon>account_circle</mat-icon>
+      </a>
+    </div>
+    <div layout="row" layout-fill>
+      <mat-sidenav-container layout-fill>
+        <mat-sidenav #sidenav class="bgc-blue-grey-50" [opened]="authService.isAuthenticated()? media.registerQuery('gt-sm') : false | async " [mode]="(media.registerQuery('gt-sm') | async) ? 'side' :  'over'"
+          [fixedInViewport]="true" [fixedTopGap]="64">
+          <mat-nav-list color="primary" *ngIf="authService.isAuthenticated()">
+            <a mat-list-item *ngFor="let item of navmenu" role="menuitem" routerLink="{{item.route}}" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact:true}">
+              <mat-icon matListIcon>{{item.icon}}</mat-icon>
+              <h3 matLine> {{item.title}} </h3>
+              <mat-divider></mat-divider>
+            </a>
+          </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content style="overflow:hidden;">
+          <router-outlet></router-outlet>
+        </mat-sidenav-content>
+      </mat-sidenav-container>
+    </div>
+  </td-layout-nav>
