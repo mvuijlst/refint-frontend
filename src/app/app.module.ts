@@ -1,3 +1,4 @@
+import { JobService } from './shared/services/job.service';
 import { AuthGuardService } from './shared/services/auth-guard.service';
 import { RequestInterceptorService } from './shared/interceptors/request.interceptor';
 import { AuthService } from './shared/services/auth.service';
@@ -16,6 +17,8 @@ import { PersonCardComponent } from './persons/person-card/person-card.component
 import { ContactComponent } from './persons/contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { EventService } from './shared/services/event.service';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     RouterModule.forRoot([]),
   ],
   providers: [
+    DatePipe,
     PersonService,
+    JobService,
+    EventService,
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,

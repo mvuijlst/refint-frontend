@@ -29,8 +29,8 @@
   </mat-sidenav>
   <mat-sidenav-content class="no-sidenav">
     <td-data-table #dataTable [data]="filteredPersons" [columns]="columns" [selectable]="true" [clickable]="true" [multiple]="true"
-      [sortable]="true" [sortBy]="sortBy" (sortChange)="sort($event)" [(ngModel)]="selectedPersons" [sortOrder]="sortOrder"
-      [style.height.%]="85" (rowClick)="rowCLick($event)" *ngIf="gridView">
+      [sortable]="true" [sortBy]="sortBy" (sortChange)="sort($event)" [sortOrder]="sortOrder"
+      [style.height.%]="85" (rowClick)="rowCLick($event)" (rowSelect)="rowClick($event)" *ngIf="gridView">
     </td-data-table>
     <div *ngIf="!gridView">
       <mat-grid-list [cols]="gridCols" flex rowHeight="2:1" [gutterSize]="5">
@@ -50,5 +50,10 @@
         </mat-grid-tile>
       </mat-grid-list>
     </div>
+    <footer>
+      totaal : {{persons.length}}
+      filtered : {{filteredTotal}}
+      selected  : {{selectedPersons.length}}
+    </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>

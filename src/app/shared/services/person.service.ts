@@ -16,7 +16,7 @@ import { Subject } from 'rxjs/Subject';
 export class PersonService {
     private personsUrl = '/interim/API/persons';
     public selectedPerson: Subject<Person> = new Subject();
-
+    public selectedPersons: Subject<Person[]> = new Subject();
     getPersons(): Observable<Person[]> {
         return this.http.get<Person[]>(this.personsUrl)
             .map(

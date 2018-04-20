@@ -8,7 +8,9 @@ import {
   TdDataTableComponent,
   ITdDataTableSortChangeEvent,
   TdDataTableSortingOrder,
-  TdDataTableService
+  TdDataTableService,
+  ITdDataTableRowClickEvent,
+  ITdDataTableSelectEvent
 } from '@covalent/core/data-table';
 import { TdMediaService } from '@covalent/core/media';
 import { Subscription } from 'rxjs/Subscription';
@@ -24,13 +26,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class PersonsComponent implements OnInit, OnDestroy {
   persons: Person[] = [];
   filteredPersons: Person[] = [];
+
   filteredTotal: number = this.persons.length;
 
   gridCols = 4;
 
-  private personsSubscription: Subscription;
-  private screenSubscription: Subscription;
-
+  private personsSubscription: Subscription = Subscription.EMPTY;
+  private screenSubscription: Subscription = Subscription.EMPTY;
+  private selectedPersonsSubscription: Subscription = Subscription.EMPTY;
   searchTerm: string = '';
   fromRow: number = 1;
   currentPage: number = 1;
@@ -72,13 +75,6 @@ export class PersonsComponent implements OnInit, OnDestroy {
     console.log('filter');
     this.filter();
   }
-  toggleContact(): void{
-    console.log('togglecontact');
-    this.onlySelected = true;
-    this.filter();
-    this.router.navigate(['persons', 'contact']);
-    if (!this.endNav.opened){ this.endNav.open();}
-  }
   filterSelected(e): void {
     this.onlySelected = !this.onlySelected;
     this.filter();
@@ -118,6 +114,14 @@ export class PersonsComponent implements OnInit, OnDestroy {
         this.endNav.toggle();
     }
   }
+  toggleContact(): void{
+    this.router.navigate(['persons', 'contact']);
+    console.log('togglecontact');
+    this.onlySelected = true;
+    this.filter();
+    setTimeout(() => {this.personService.selectedPersons.next(this.selectedPersons); }, 100 );
+    if (!this.endNav.opened){ this.endNav.open();}
+  }
 
   toggleView() {
     this.gridView = !this.gridView;
@@ -135,13 +139,14 @@ export class PersonsComponent implements OnInit, OnDestroy {
     return this.selectedPersons.findIndex(person => person === e) !== -1;
   }
 
-  cbxClick(cbx: MatCheckbox, pers: Person): void {
-    if (cbx.checked) {
-      if (this.selectedPersons.findIndex(person => person === pers) === -1) {
-        this.selectedPersons.push(pers);
+  private handleSelectPerson(checked: boolean, person: Person){
+    console.log(this.selectedPersons);
+    if (checked) {
+      if (this.selectedPersons.findIndex(pers => pers === person) === -1) {
+        this.selectedPersons.push(person);
       }
     } else {
-      const ind = this.selectedPersons.findIndex(person => person === pers)
+      const ind = this.selectedPersons.findIndex(pers => pers === person);
       console.log(ind);
       console.log(this.selectedPersons);
       if (ind !== -1) {
@@ -150,7 +155,18 @@ export class PersonsComponent implements OnInit, OnDestroy {
       }
     }
     console.log(this.selectedPersons);
+    this.personService.selectedPersons.next(this.selectedPersons);
+    console.log(this.personService.selectedPersons);
     this.filter();
+
+  }
+
+  rowClick(event: ITdDataTableSelectEvent) {
+    this.handleSelectPerson(event.selected, event.row);
+  }
+
+  cbxClick(cbx: MatCheckbox, pers: Person): void {
+    this.handleSelectPerson(cbx.checked, pers);
   }
 
   constructor(
@@ -165,6 +181,7 @@ export class PersonsComponent implements OnInit, OnDestroy {
     this.personsSubscription = this.personService.getPersons().subscribe(
         (persons: Person[]) => {this.persons = persons; this.filter(); this.watchScreen(); }
       );
+    // this.selectedPersonsSubscription = this.personService.selectedPersons.subscribe(persons => this.selectedPersons = persons);
   }
   ngOnDestroy(){
     if (this.personsSubscription){

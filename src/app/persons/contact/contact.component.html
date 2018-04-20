@@ -1,3 +1,99 @@
-<p>
-  contact works!
-</p>
+<form class="wide-form" [formGroup]="messageForm">
+<div>
+  <mat-toolbar color="primary">Contacteren</mat-toolbar>
+<td-steps>
+  <td-step #reasonStep
+    label="Reden Contact" 
+    sublabel="{{selectedPersons.length}} personen geslecteerd voor {{selectedMessageType.name}}"
+    [state]="stepStateReason"
+    [active]="true"
+    [disabled]="false"
+    (activated)="openReasonStep()"
+    >
+    <mat-form-field>
+      <mat-select 
+        [(value)]="selectedMessageType" 
+        (selectionChange)="reasonChange($event)"
+        formControlName="messageType">
+        <mat-option *ngFor="let reason of contactReasons" [value]="reason">{{reason.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </td-step>
+  <td-step #linkedItemStep 
+    label="Job - Event Select"
+    sublabel=""
+    [state]="stepStateLinkedItem"
+    [disabled]="true"
+    >
+    <mat-form-field>
+      <mat-select 
+        [(value)]="selectedItem" 
+        (selectionChange)="linkedItemChange($event)"
+        formControlName="linkedItem"
+        #linkedItemSelect>
+        <mat-option *ngFor="let job of linkedItems" [value]="job" class="linked_items">
+            <span class="optiondate">{{job.dateFrom | date:'dd/MM/yy'}}</span>
+            <span class="optionblock middle">{{job.name}}</span>
+            <span class="optionblock">{{job.location.name}}</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <ng-template td-step-actions>
+      <button 
+        mat-raised-button color="primary" 
+        (click)="linkedItemConfirm()" 
+        class="text-upper" 
+        [disabled]="linkedItemSelect.value ? !(linkedItemSelect.value.id>0) : true">Ok</button>
+    </ng-template>
+  </td-step>
+  <td-step #smsStep
+    label="SMS Boodschap" 
+    sublabel="Geef hier je SMS in" 
+    [state]="stepStateSMS" 
+    [disabled]="disabled">
+    <div formGroupName="smsMsg" #smsGroup>
+      <mat-form-field class="full-width">
+        <input type="text" matInput placeholder="Onderwerp" formControlName="onderwerp">
+      </mat-form-field> 
+      <mat-form-field class="full-width">
+        <textarea matInput matTextareaAutosize matAutosizeMinRows="5"
+          matAutosizeMaxRows="15" placeholder="Inhoud" formControlName="msg"></textarea> 
+      </mat-form-field> 
+      <section>
+        <mat-checkbox formControlName="infoLink">Info Link</mat-checkbox>
+        <mat-checkbox formControlName="yesLink">Yes Link</mat-checkbox>
+        <mat-checkbox formControlName="noLink">No Link</mat-checkbox>
+      </section>
+    </div>
+    <ng-template td-step-actions>
+        <button mat-raised-button color="primary" (click)="confirmMsg('sms', false)" class="text-upper">OK</button>
+      <button mat-button (click)="confirmMsg('sms', true)" class="text-upper">Geen SMS</button>
+    </ng-template>
+  </td-step>
+  <td-step #mailStep
+    label="Mail Boodschap" 
+    sublabel="Geef hier je Mail in" 
+    [state]="stepStateMail" 
+    [disabled]="disabled">
+    <div formGroupName="mailMsg">
+      <mat-form-field class="full-width">
+        <input type="text" matInput placeholder="Onderwerp" formControlName="onderwerp">
+      </mat-form-field> 
+      <mat-form-field class="full-width">
+        <textarea matInput matTextareaAutosize matAutosizeMinRows="5"
+          matAutosizeMaxRows="15" placeholder="Inhoud" formControlName="msg"></textarea> 
+      </mat-form-field> 
+      <section>
+        <mat-checkbox formControlName="infoLink">Info Link</mat-checkbox>
+        <mat-checkbox formControlName="yesLink">Yes Link</mat-checkbox>
+        <mat-checkbox formControlName="noLink">No Link</mat-checkbox>
+      </section>
+    </div>
+    <ng-template td-step-actions>
+        <button mat-raised-button color="primary" (click)="confirmMsg('mail', false)" class="text-upper">OK</button>
+      <button mat-button (click)="confirmMsg('mail', true)" class="text-upper">Geen SMS</button>
+    </ng-template>
+  </td-step>
+</td-steps>
+</div>
+</form>
