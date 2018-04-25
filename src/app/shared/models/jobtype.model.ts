@@ -1,5 +1,6 @@
 export class JobType {
-    constructor(private id: number,
-        private name: string,
-        private description: string) {}
+    constructor(
+        public id: number,
+        public name: string,
+        public description: string) {}
 }

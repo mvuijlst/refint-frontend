@@ -15,6 +15,11 @@ export class AuthService {
         return localStorage.getItem('token');
     }
 
+    public getUserId(): number {
+        const token = localStorage.getItem('token');
+        return +helper.decodeToken(token)['user_id'];
+    }
+
     public getRefreshToken(): string {
         return localStorage.getItem('refresh_token');
     }

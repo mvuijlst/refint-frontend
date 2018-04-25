@@ -8,7 +8,6 @@
     [state]="stepStateReason"
     [active]="true"
     [disabled]="false"
-    (activated)="openReasonStep()"
     >
     <mat-form-field>
       <mat-select 
@@ -50,7 +49,7 @@
     label="SMS Boodschap" 
     sublabel="Geef hier je SMS in" 
     [state]="stepStateSMS" 
-    [disabled]="disabled">
+    [disabled]="true">
     <div formGroupName="smsMsg" #smsGroup>
       <mat-form-field class="full-width">
         <input type="text" matInput placeholder="Onderwerp" formControlName="onderwerp">
@@ -74,7 +73,7 @@
     label="Mail Boodschap" 
     sublabel="Geef hier je Mail in" 
     [state]="stepStateMail" 
-    [disabled]="disabled">
+    [disabled]="true">
     <div formGroupName="mailMsg">
       <mat-form-field class="full-width">
         <input type="text" matInput placeholder="Onderwerp" formControlName="onderwerp">
@@ -91,7 +90,23 @@
     </div>
     <ng-template td-step-actions>
         <button mat-raised-button color="primary" (click)="confirmMsg('mail', false)" class="text-upper">OK</button>
-      <button mat-button (click)="confirmMsg('mail', true)" class="text-upper">Geen SMS</button>
+      <button mat-button (click)="confirmMsg('mail', true)" class="text-upper">Geen Mail</button>
+    </ng-template>
+  </td-step>
+  <td-step #confirmStep
+    label="Bevestig Boodschap" 
+    sublabel="Sla boodschap op, of verzend ze" 
+    [state]="stepStateConfirm" 
+    [disabled]="true">
+    <ng-template td-step-actions>
+        <button mat-raised-button color="primary"
+          [disabled]="savingmessage"
+          (click)="createMsg($event)"
+          class="text-upper">Opslaan</button>
+      <button mat-raised-button 
+          (click)="sendMsg()" 
+          [disabled]="!currentMessage"
+          class="text-upper">Verzend</button>
     </ng-template>
   </td-step>
 </td-steps>

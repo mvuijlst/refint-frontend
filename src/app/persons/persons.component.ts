@@ -1,3 +1,5 @@
+import { JobType } from './../shared/models/jobtype.model';
+import { JobTypeService } from './../shared/services/jobtype.service';
 import { Observable } from 'rxjs/Observable';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { PersonService } from './../shared/services/person.service';
@@ -16,6 +18,7 @@ import { TdMediaService } from '@covalent/core/media';
 import { Subscription } from 'rxjs/Subscription';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { Router, ActivatedRoute } from '@angular/router';
+import { TdLayoutManageListToggleDirective } from '@covalent/core/layout';
 
 
 @Component({
@@ -26,7 +29,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class PersonsComponent implements OnInit, OnDestroy {
   persons: Person[] = [];
   filteredPersons: Person[] = [];
-
+  jobTypes: JobType[] = [];
   filteredTotal: number = this.persons.length;
 
   gridCols = 4;
@@ -34,18 +37,23 @@ export class PersonsComponent implements OnInit, OnDestroy {
   private personsSubscription: Subscription = Subscription.EMPTY;
   private screenSubscription: Subscription = Subscription.EMPTY;
   private selectedPersonsSubscription: Subscription = Subscription.EMPTY;
-  searchTerm: string = '';
-  fromRow: number = 1;
-  currentPage: number = 1;
-  pageSize: number = 500;
+  private jobtypesSubscription: Subscription = Subscription.EMPTY;
+
+  selectedJobTypes: JobType[] = [];
+  onlyActive = true;
+  onlySelected = false;
+  searchTerm = '';
+  currentPage = 1;
+  fromRow = 1;
+  pageSize = 500;
   selectedPersons: Person[] = [];
-  gridView: boolean = true;
-  onlyActive:boolean = true;
-  onlySelected: boolean = false;
-  personSelected: boolean = false;
+  gridView = true;
+  personSelected = false;
+
   // datatable stuff
   @ViewChild('dataTable') private datatable: TdDataTableComponent;
   @ViewChild('endNav') private endNav: MatSidenav;
+
   sortBy = 'firstName';
   sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
 
@@ -99,10 +107,23 @@ export class PersonsComponent implements OnInit, OnDestroy {
           d.defaultMail.toLowerCase().indexOf(sTerm) !== -1
           || !sTerm));
       });
+      const jobtypes = this.selectedJobTypes;
+      if (jobtypes.length > 0) {
+        console.log('extra filter');
+
+        newData = newData.filter(function(d) {
+          let personfound = false;
+          personfound = !personfound ? d.jobpool1 ? jobtypes.some(j => j.id === d.jobpool1.id) : false : true;
+          personfound = !personfound ? d.jobpool2 ? jobtypes.some(j => j.id === d.jobpool2.id) : false : true;
+          personfound = !personfound ? d.jobpool3 ? jobtypes.some(j => j.id === d.jobpool3.id) : false : true;
+          return personfound;
+        });
+        }
     this.filteredTotal = newData.length;
     newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
     newData = this._dataTableService.pageData(newData, this.fromRow, this.currentPage * this.pageSize);
     this.filteredPersons = newData;
+    console.log(this.filteredPersons);
   }
 
   rowCLick(person): void {
@@ -139,6 +160,12 @@ export class PersonsComponent implements OnInit, OnDestroy {
     return this.selectedPersons.findIndex(person => person === e) !== -1;
   }
 
+  handleJobTypeChange(e) {
+    console.log('jobtype');
+    console.log(this.selectedJobTypes);
+    console.log(e);
+    this.filter();
+  }
   private handleSelectPerson(checked: boolean, person: Person){
     console.log(this.selectedPersons);
     if (checked) {
@@ -175,13 +202,17 @@ export class PersonsComponent implements OnInit, OnDestroy {
     private _dataTableService: TdDataTableService,
     private ngZone: NgZone,
     private router: Router,
-  private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private jobtypeService: JobTypeService
+  ) { }
 
   ngOnInit() {
     this.personsSubscription = this.personService.getPersons().subscribe(
         (persons: Person[]) => {this.persons = persons; this.filter(); this.watchScreen(); }
       );
-    // this.selectedPersonsSubscription = this.personService.selectedPersons.subscribe(persons => this.selectedPersons = persons);
+    this.jobtypesSubscription = this.jobtypeService.getJobTypes().subscribe(
+      (jobtypes: JobType[]) => {this.jobTypes = jobtypes; }
+    );
   }
   ngOnDestroy(){
     if (this.personsSubscription){
@@ -190,5 +221,6 @@ export class PersonsComponent implements OnInit, OnDestroy {
     if (this.screenSubscription){
     this.screenSubscription.unsubscribe();
     }
+    this.jobtypesSubscription.unsubscribe();
   }
 }

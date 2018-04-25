@@ -1,3 +1,6 @@
+import { JobTypeService } from './shared/services/jobtype.service';
+import { MessageLogService } from './shared/services/messagelog.service';
+import { MessageService } from './shared/services/message.service';
 import { JobService } from './shared/services/job.service';
 import { AuthGuardService } from './shared/services/auth-guard.service';
 import { RequestInterceptorService } from './shared/interceptors/request.interceptor';
@@ -40,6 +43,9 @@ import { DatePipe } from '@angular/common';
     PersonService,
     JobService,
     EventService,
+    MessageService,
+    MessageLogService,
+    JobTypeService,
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,

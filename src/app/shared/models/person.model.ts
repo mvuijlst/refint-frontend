@@ -110,43 +110,43 @@ export class Person {
             this.interviewer = new KeyValue(person['interviewer']['id'], person['interviewer']['name']);
         }
         if (person['jobtype1']) {
-            this.jobtype1 = new KeyValueDescription(
+            this.jobtype1 = new JobType(
                 person['jobtype1']['id'],
                 person['jobtype1']['name'],
                 person['jobtype1']['description']);
         }
         if (person['jobtype2']) {
-            this.jobtype2 = new KeyValueDescription(
+            this.jobtype2 = new JobType(
                 person['jobtype2']['id'],
                 person['jobtype2']['name'],
                 person['jobtype2']['description']);
         }
         if (person['jobtype3']) {
-            this.jobtype3 = new KeyValueDescription(
+            this.jobtype3 = new JobType(
                 person['jobtype3']['id'],
                 person['jobtype3']['name'],
                 person['jobtype3']['description']);
         }
         if (person['jobtypenot']) {
-            this.jobtypenot = new KeyValueDescription(
+            this.jobtypenot = new JobType(
                 person['jobtypenot']['id'],
                 person['jobtypenot']['name'],
                 person['jobtypenot']['description']);
         }
         if (person['jobpool1']) {
-            this.jobpool1 = new KeyValueDescription(
+            this.jobpool1 = new JobType(
                 person['jobpool1']['id'],
                 person['jobpool1']['name'],
                 person['jobpool1']['description']);
         }
         if (person['jobpool2']) {
-            this.jobpool2 = new KeyValueDescription(
+            this.jobpool2 = new JobType(
                 person['jobpool2']['id'],
                 person['jobpool2']['name'],
                 person['jobpool2']['description']);
         }
         if (person['jobpool3']) {
-            this.jobpool3 = new KeyValueDescription(
+            this.jobpool3 = new JobType(
                 person['jobpool3']['id'],
                 person['jobpool3']['name'],
                 person['jobpool3']['description']);
