@@ -1,0 +1,25 @@
+  <h3>
+    Geef commentaar of sluit af
+  </h3>
+<form [formGroup]="detailForm">
+<mat-dialog-content>
+      <mat-slide-toggle
+      class="example-margin"
+      color="warn"
+      checked="false"
+      formControlName="fail">
+    Negatief
+  </mat-slide-toggle>
+    <mat-form-field [style.width.%]="100">
+        <textarea matInput matTextareaAutosize matAutosizeMinRows="5"
+        matAutosizeMaxRows="15" placeholder="Boodschap"
+        name="boodschap"
+        formControlName="comment"
+        ></textarea> 
+      </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button (click)="saveComment()">Opslaan</button>
+  <button mat-raised-button mat-dialog-close>annuleren</button>
+</mat-dialog-actions>
+</form>

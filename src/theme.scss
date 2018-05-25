@@ -24,7 +24,7 @@ $custom-toolbar-typography: mat-typography-config(
 
 // Include pre-bundled material-icons
 $mat-font-url: '../node_modules/@covalent/core/common/styles/font/';
-@include covalent-material-icons();
+// @include covalent-material-icons();
 // Alternative way to include material-icons
 // @import '../node_modules/@covalent/core/common/material-icons.css';
 
@@ -70,73 +70,73 @@ mat-nav-list {
     }
 }
 
-// Custom theme examples
-.white-orange {
-    $primary2: mat-palette($mat-grey, 50);
-    $accent2:  mat-palette($mat-orange, 800);
-    $warn2:    mat-palette($mat-red, 600);
+// // Custom theme examples
+// .white-orange {
+//     $primary2: mat-palette($mat-grey, 50);
+//     $accent2:  mat-palette($mat-orange, 800);
+//     $warn2:    mat-palette($mat-red, 600);
 
-    $white-orange: mat-light-theme($primary2, $accent2, $warn2);
+//     $white-orange: mat-light-theme($primary2, $accent2, $warn2);
 
-    @include angular-material-theme($white-orange);
-    @include covalent-theme($white-orange);
-}
-.dark-grey-blue {
-    $primary3: mat-palette($mat-blue-grey, 800);
-    $accent3:  mat-palette($mat-teal, 500);
-    $warn3:    mat-palette($mat-red, 600);
+//     @include angular-material-theme($white-orange);
+//     @include covalent-theme($white-orange);
+// }
+// .dark-grey-blue {
+//     $primary3: mat-palette($mat-blue-grey, 800);
+//     $accent3:  mat-palette($mat-teal, 500);
+//     $warn3:    mat-palette($mat-red, 600);
 
-    $dark-grey-blue: mat-dark-theme($primary3, $accent3, $warn3);
+//     $dark-grey-blue: mat-dark-theme($primary3, $accent3, $warn3);
 
-    @include angular-material-theme($dark-grey-blue);
-    @include covalent-theme($dark-grey-blue);
-}
-.light-blue-red {
-    $primary4: mat-palette($mat-light-blue, 700);
-    $accent4:  mat-palette($mat-red, 700);
-    $warn4:    mat-palette($mat-deep-orange, 800);
+//     @include angular-material-theme($dark-grey-blue);
+//     @include covalent-theme($dark-grey-blue);
+// }
+// .light-blue-red {
+//     $primary4: mat-palette($mat-light-blue, 700);
+//     $accent4:  mat-palette($mat-red, 700);
+//     $warn4:    mat-palette($mat-deep-orange, 800);
 
-    $light-blue-red: mat-light-theme($primary4, $accent4, $warn4);
+//     $light-blue-red: mat-light-theme($primary4, $accent4, $warn4);
 
-    @include angular-material-theme($light-blue-red);
-    @include covalent-theme($light-blue-red);
-}
+//     @include angular-material-theme($light-blue-red);
+//     @include covalent-theme($light-blue-red);
+// }
 
-/* ------------------------------------------------------------------------------- */
-$foreground: map-get($theme, foreground);
-$background: map-get($theme, background);
+// /* ------------------------------------------------------------------------------- */
+// $foreground: map-get($theme, foreground);
+// $background: map-get($theme, background);
 
-// Apply theme for this app
+// // Apply theme for this app
 
-// NGX Charts
-[ngx-charts-axis-label] text {
-    fill: mat-color($foreground, secondary-text);
-}
-.tick text {
-    fill: mat-color($foreground, disabled);
-}
-.gridline-path {
-    &.gridline-path-horizontal,
-    &.gridline-path-vertical {
-        stroke: rgba(black, 0.06);
-    }
-}
-.legend-title-text {
-    color: mat-color($foreground, secondary-text);
-}
-ngx-charts-line-chart,
-ngx-charts-area-chart,
-ngx-charts-area-chart-stacked {
-    .gridline-path {
-        &.gridline-path-vertical {
-            display: none;
-        }
-    }
-}
-ngx-charts-line-chart {
-    .line-series {
-        .line {
-            stroke-width: 2;
-        }
-    }
-}
+// // NGX Charts
+// [ngx-charts-axis-label] text {
+//     fill: mat-color($foreground, secondary-text);
+// }
+// .tick text {
+//     fill: mat-color($foreground, disabled);
+// }
+// .gridline-path {
+//     &.gridline-path-horizontal,
+//     &.gridline-path-vertical {
+//         stroke: rgba(black, 0.06);
+//     }
+// }
+// .legend-title-text {
+//     color: mat-color($foreground, secondary-text);
+// }
+// ngx-charts-line-chart,
+// ngx-charts-area-chart,
+// ngx-charts-area-chart-stacked {
+//     .gridline-path {
+//         &.gridline-path-vertical {
+//             display: none;
+//         }
+//     }
+// }
+// ngx-charts-line-chart {
+//     .line-series {
+//         .line {
+//             stroke-width: 2;
+//         }
+//     }
+// }

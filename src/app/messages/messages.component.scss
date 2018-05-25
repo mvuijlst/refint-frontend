@@ -1,0 +1,38 @@
+// ::ng-deep .mat-grid-tile .mat-figure {
+//     align-items: initial !important;
+//     justify-content: flex-start !important;
+// }
+
+// ::ng-deep .mat-grid-tile .mat-figure .mat-list{
+//     width: 100%;
+// }
+
+// ::ng-deep .mat-grid-tile-footer{
+//     background-color: transparent !important;  
+// }
+mat-icon{
+    width:180px;
+    height:90px;
+}
+.rowtitle{
+    padding:8px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 90%
+}
+.rowdata{
+    padding:8px;
+    font-size: 90%
+}
+.messagebox {
+    padding:15px; 
+    align-content: center;
+    max-width:600px;
+    display: flex;
+    flex-direction: column;
+}
+.buttonrow{
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+}

@@ -1,0 +1,28 @@
+<mat-card *ngIf="jobke">
+  <mat-card-title>
+    Job :  {{jobke.name}}
+  </mat-card-title>
+  <mat-card-content>
+    <mat-list>
+    <mat-list-item>
+      <h3 matLine>Locatie : {{jobke.location.name}}</h3>
+    </mat-list-item>
+    <mat-divider [inset]="true"></mat-divider>
+    <mat-list-item>
+      <h3 matLine> Datum : {{jobke.datefrom | date : 'dd/MM/yyyy' }} tot {{jobke.dateuntil | date : 'dd/MM/yyyy' }}</h3>
+    </mat-list-item>
+    <mat-divider [inset]="true"></mat-divider>
+    <mat-list-item>
+      <h3 matLine> Soort job : {{jobke.jobType.name }}</h3>
+      <p matLine> {{jobke.description}} </p>
+    </mat-list-item>
+    <mat-list-item *ngIf="personids.length > 0">
+        <h3 matLine> Vrijwilligers :</h3>
+        <p *ngFor="let person of personids" matLine>
+            {{person.lastName}}, {{person.firstName}} 
+        </p>
+      </mat-list-item>
+  </mat-list>
+    <mat-divider [inset]="true"></mat-divider>
+  </mat-card-content>
+</mat-card>

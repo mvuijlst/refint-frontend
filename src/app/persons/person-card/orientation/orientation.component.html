@@ -1,0 +1,22 @@
+<div *ngIf="person">
+<div>
+  <app-remarks [subject]="'orientation'" class="text-nd"></app-remarks>
+</div>
+<h3>Werkpoule</h3>
+<ul>
+  <li *ngIf="person.jobpool1">{{person.jobpool1.name}}</li>
+  <li *ngIf="person.jobpool2">{{person.jobpool2.name}}</li>
+  <li *ngIf="person.jobpool3">{{person.jobpool3.name}}</li>
+</ul>
+<h3>Praktisch</h3>
+<ul>
+  <li *ngIf="person.bankaccount">Bankrekening : {{person.bankaccount}}</li>
+  <li>{{person.beDriverslicense ? 'wel ' : 'geen '}}BE rijbewijs</li>
+  <li>{{person.halal? 'halal' : 'no halal'}}</li>
+  <li>{{person.alcohol? 'alcohol OK' : 'no alcohol'}}</li>
+</ul>      
+<h3>Talenkennis</h3>
+<ul>
+  <li *ngFor="let lang of person.languages">{{lang.language}} : {{lang.proficiency}}</li>
+</ul>
+</div>

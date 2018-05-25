@@ -1,0 +1,41 @@
+.jobstatus{
+    background-color:#27ae60;
+    height:30px;
+    width:30px; 
+    line-height: 30px; 
+    display:block; 
+    text-align: center;
+    margin: 0 20px 10px 0px; 
+    border-radius: 50%; 
+    background-color:#27ae60;
+    color:white;    
+}
+.genrow {
+    font-size:90%
+}
+.cellleft{
+    font-weight: bold;
+    text-align: right;
+    padding:8px;
+}
+.cellright{
+    padding:8px;
+}
+
+.mat-tab-group{
+    height: 500px;
+}
+.mat-tab-body-wrapper {
+    flex-grow: 1;
+}
+
+.mat-tab-body {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.mat-tab-body-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}

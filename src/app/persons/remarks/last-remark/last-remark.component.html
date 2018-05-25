@@ -1,0 +1,10 @@
+<div class="laststicky height-auto" *ngIf="lastSticky" [ngClass]="lastSticky.sticky ? 'sticky' : ''">
+<div>
+  <mat-icon *ngIf="lastSticky.sticky" class="text-nd">notification_important</mat-icon>
+    <b>{{lastSticky.subject}}</b>
+</div>
+<div>
+    {{lastSticky.content}}
+</div>
+</div>
+

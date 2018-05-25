@@ -1,3 +1,4 @@
+import { Status, JobStatus } from './status.model';
 import { Organisation } from './organisation.model';
 import { Location } from './location.model';
 import { JobType } from './jobtype.model';
@@ -9,43 +10,34 @@ export class Job {
         public jobType: JobType;
         public permanent: boolean;
         public description: string;
-        public status: string;
+        public status: Status;
         public location: Location;
         public contactPerson: string;
-        public dateFrom: Date;
-        public dateUntil: Date;
+        public datefrom: Date;
+        public dateuntil: Date;
         public personsId: number[];
     constructor(job: any) {
-        this.id = job['id'];
-        this.organisation =
-            new Organisation(
-                job['organisation']['id'],
-                job['organisation']['name'],
-                job['organisation']['logo'],
-                job['organisation']['description']);
-        this.name = job['name'];
-        this.jobType =
-            new JobType(
-                job['jobtype']['id'],
-                job['jobtype']['name'],
-                job['jobtype']['description']);
-        this.permanent = job['permanent'];
-        this.description = job['description'];
-        this.status = job['status'];
-        if (job['location']){
-            this.location =
-                new Location(
-                    job['location']['id'],
-                    job['location']['name'],
-                    job['location']['description'],
-                );
-            } else{
-                this.location = new Location(0, 'ongekend', '');
-            }
-    
-        this.contactPerson = job['contactperson'];
-        this.dateFrom = job['datefrom'];
-        this.dateUntil = job['dateuntil'];
+        
+        if (typeof job === 'number'){
+            this.id = job;
+        } else{
+            this.id = job['id'] ? job['id'] : undefined;
+        }
+        this.organisation = job['organisation'] ? new Organisation(job['organisation']) : undefined;
+        this.name = job['name'] ? job['name'] : undefined;
+        this.jobType = job['jobtype'] ? new JobType(job['jobtype']) : undefined;
+        this.permanent = job['permanent'] ? job['permanent'] : undefined;
+        this.description = job['description'] ? job['description'] : undefined;
+        this.status = new Status(job['status']);
+
+
+
+        this.location = job['location'] ? new Location(job['location']) : new Location({'id': 0, 'name' : 'ongekend', 'description': ''});
+        this.contactPerson = job['contactperson'] ? job['contactperson'] : undefined;
+        this.datefrom = job['datefrom'] ?
+            job['datefrom'] instanceof Date ? job['datefrom'] : new Date(job['datefrom']) : undefined;
+        this.dateuntil =  job['dateuntil'] ?
+            job['dateuntil'] instanceof Date ? job['dateuntil'] :  new Date(job['dateuntil']) : undefined;
         this.personsId = job['persons'];
     }
 }

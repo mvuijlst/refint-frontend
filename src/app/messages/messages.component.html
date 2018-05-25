@@ -1,0 +1,87 @@
+<div style="justify-content: center;display: flex; min-width: 400px;" 
+  *tdLoading="'overlayStarSyntax'; mode:'indeterminate'; type:'circle'; strategy:'overlay'; color:'accent'; until:!savingmessage"
+>
+
+<div class="mat-elevation-z2 messagebox" flex *ngIf="messageLog">
+  <mat-icon svgIcon="assets:refulogoblue" class="text-xl"></mat-icon>
+  <mat-divider [inset]="false"></mat-divider>
+  <form #form="ngForm" *ngIf="!messageConfirm">
+    <div *ngIf="messageLog.message.job && !messageConfirm">
+      <div layout="row">
+        <span flex="30" class="rowtitle">Job</span>
+        <span flex="70" class="rowdata">{{messageLog.message.job.name}}</span>
+      </div>
+      <div layout="row">
+          <span flex="30" class="rowtitle">Wanneer</span>
+          <span flex="70" class="rowdata" style="white-space: nowrap;">{{messageLog.message.job.datefrom | date : 'dd/MM/yyyy' }} - 
+              {{messageLog.message.job.dateuntil | date : 'dd/MM/yyyy' }}</span>
+      </div>
+      <div layout="row">
+          <span flex="30" class="rowtitle">Waar</span>
+          <span flex="70" class="rowdata">{{messageLog.message.job.location.name}}</span>
+      </div>
+      <div layout="row">
+          <span flex="30" class="rowtitle text-truncate">Afspraak met</span>
+          <span flex="70" class="rowdata">{{messageLog.message.created_by.uername}}</span>
+      </div>
+      <div layout="row">
+          <span flex="30" class="rowtitle">Wat</span>
+          <span flex="70" class="rowdata">{{messageLog.message.job.jobType.name }}
+            <br>
+            {{messageLog.message.job.description }}
+          </span>
+      </div>
+    </div>
+    <div *ngIf="messageLog.message.event">
+        <div layout="row">
+          <span flex="30" class="rowtitle">Evenement</span>
+          <span flex="70" class="rowdata">{{messageLog.message.event.name}}</span>
+        </div>
+        <div layout="row">
+            <span flex="30" class="rowtitle">Wanneer</span>
+            <span flex="70" class="rowdata" style="white-space: nowrap;">{{messageLog.message.event.datefrom | date : 'dd/MM/yyyy' }} - 
+                {{messageLog.message.event.dateuntil | date : 'dd/MM/yyyy' }}</span>
+        </div>
+        <div layout="row">
+            <span flex="30" class="rowtitle">Waar</span>
+            <span flex="70" class="rowdata">{{messageLog.message.event.location.name}}</span>
+        </div>
+        <div layout="row">
+            <span flex="30" class="rowtitle text-truncate">Afspraak met</span>
+            <span flex="70" class="rowdata">{{messageLog.message.created_by.uername}}</span>
+        </div>
+        <div layout="row">
+            <span flex="30" class="rowtitle">Wat</span>
+            <span flex="70" class="rowdata">{{messageLog.message.event.description }}
+            </span>
+        </div>
+    </div>    
+    <div *ngIf="!messageLog.message.event && !messageLog.message.job">
+      <div layout="row">
+        <span flex="30" class="rowtitle">Onderwerp</span>
+        <span flex="70" class="rowdata">{{messageLog.message.subject}}
+        </span>
+      </div>
+      <div layout="row">
+          <span flex="30" class="rowtitle">Bericht</span>
+          <span flex="70" class="rowdata">{{messageLog.message.message_sms}}
+        </span>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="buttonrow">
+      <div flex="50" class="text-center">
+        <button mat-raised-button color="accent" class="text-upper" 
+          *ngIf="messageLog.message.confirmlink_sms && !answered"
+          (click)="saveLogDetail(form.value, 'yes')">JA IK KAN</button>
+      </div>
+      <div flex="50" class="text-center">
+        <button mat-raised-button color="warn" class="text-upper" 
+          *ngIf="messageLog.message.confirmlink_sms  && !answered"
+          (click)="saveLogDetail(form.value, 'no')">Neen Ik kan niet</button>
+      </div>
+    </div>
+  </form>
+  <app-confirm-message *ngIf="messageConfirm" [signedid]="signedLogId" [msgLogDetail]="savedLogDetail" ></app-confirm-message>
+</div>
+</div>

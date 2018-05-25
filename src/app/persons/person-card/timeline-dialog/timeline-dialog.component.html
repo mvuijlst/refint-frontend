@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>detail</h2>
+<mat-dialog-content> 
+  <mat-list>
+    <mat-list-item>
+      {{data.created | date: 'dd/MM/yyyy HH:mm:ss'}}
+    </mat-list-item>
+    <mat-list-item>
+        {{data.detailType.name}}
+      </mat-list-item>
+      <mat-list-item>
+          {{data.comment}}
+        </mat-list-item>
+      </mat-list>
+</mat-dialog-content>

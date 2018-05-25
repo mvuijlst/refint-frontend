@@ -1,0 +1,24 @@
+<td-expansion-panel-group *ngIf="stickies.length > 0 || remarks.length > 0">
+    <td-expansion-panel class="expPanel" [expand]="false" [label]="'Opmerkingen'">
+        <div *ngFor="let remark of stickies" class="remarksticky">
+            <div layout="row" class="pad-bottom-sm"> 
+              <span class="caption"><b>{{remark.created | date : 'dd/MM/yy'}}</b></span>  
+              <span flex style="text-align: center;"><b>{{remark.author.name}}</b></span>
+              <span >{{remark.subject}}</span>
+            </div>
+            <mat-divider inset="true"></mat-divider>
+            <div class="pad-top-sm pad-bottom-sm">{{remark.content}}</div>
+          </div>
+          <div *ngFor="let remark of remarks" class="remark">
+              <div layout="row" class="pad-bottom-sm"> 
+                  <span><b>{{remark.created | date : 'dd/MM/yy'}}</b></span>  
+                  <span flex style="text-align: center;"><b>{{remark.author.name}}</b></span>
+                  <span ><b>{{remark.subject}}</b></span>
+                </div>
+                <mat-divider inset="true"></mat-divider>
+                <div class="pad-top-sm pad-bottom-sm">{{remark.content}}</div>
+                <mat-divider inset="true" class="bgc-blue-grey-300"></mat-divider>
+          </div>
+    </td-expansion-panel>
+</td-expansion-panel-group>
+

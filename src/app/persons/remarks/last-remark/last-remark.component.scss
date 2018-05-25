@@ -1,0 +1,9 @@
+.laststicky{
+    padding:10px;
+    background-color:whitesmoke;
+    flex:1
+}
+
+.laststicky.sticky{
+    background-color: rgba(239,108,0,.15);
+}

@@ -1,0 +1,138 @@
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { AuthService } from './../services/auth.service';
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpSentEvent,
+  HttpHeaderResponse,
+  HttpProgressEvent,
+  HttpResponse,
+  HttpErrorResponse,
+  HttpUserEvent
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+// import 'rxjs/Rx'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { switchMap, catchError, tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
+import 'rxjs/add/observable/throw';
+@Injectable()
+export class RequestInterceptorService implements HttpInterceptor {
+
+  isRefreshingToken = false;
+  tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
+  constructor(
+    private authService: AuthService,
+    private router:Router
+  ) { }
+
+  addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
+    return req.clone({ setHeaders: { Authorization: 'Bearer ' + token } });
+  }
+
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
+      if (
+        (req.url.indexOf('/API/messages/') > 0) ||
+        (req.url.indexOf('/messagelogdetailtypes') > 0) ||
+        (req.url.indexOf('.svg') > 0) 
+        // || (req.url.indexOf('api-token-refresh'))>0
+      ) {
+        return next.handle(req);
+      }
+
+      return next.handle(this.addToken(req, this.authService.getToken())).pipe(
+        catchError(error => {
+          if (error instanceof HttpErrorResponse) {
+            switch ((<HttpErrorResponse>error).status) {
+              case 400:
+                return Observable.throw(new Error(error.error.non_field_errors[0]));
+              case 401:
+               if (req.url.indexOf('api-token-refresh')>0){
+                 console.log('should redirect ')
+                 return this.router.navigate(['login']);
+               }
+                // return Observable.throw(new Error(error.message));
+                return this.handle401Error(req, next);
+              default:
+                return Observable.throw(error);
+              // default:
+              //   return Observable.throw(new Error(error.message));
+            }
+          } else {
+            return Observable.throw(new Error(error.message));
+          }
+        })
+      );
+  }
+
+  handle401Error(req: HttpRequest<any>, next: HttpHandler) {
+    console.log('handle401')
+    console.log(req);
+    console.log(next);
+    console.log(this.isRefreshingToken);
+    if (this.isRefreshingToken && (req.url.indexOf('api-token-refresh') > 0)) {
+      this.logoutUser();
+    }
+    if (!this.isRefreshingToken) {
+      this.isRefreshingToken = true;
+
+      // Reset here so that the following requests wait until the token
+      // comes back from the refreshToken call.
+      this.tokenSubject.next(null);
+      console.log('refresh token?')
+      this.authService.refreshToken().subscribe(
+        (newToken) => {
+          console.log(newToken)
+          this.tokenSubject.next(newToken.access);
+          this.authService.addTokens(newToken.access, '');
+          this.isRefreshingToken = false
+          console.log('nexthandle');
+          return next.handle(this.addToken(req, newToken.access));          
+        }
+      )
+
+
+      // return this.authService.refreshToken().pipe(
+      // // subscribe( (newToken) => {
+      // //   console.log(newToken);
+      //   tap(newToken => console.log(newToken)),
+      //   switchMap((newToken: any) => {
+      //     console.log(newToken);
+      //     if (newToken) {
+      //         this.tokenSubject.next(newToken.access);
+      //         this.authService.addTokens(newToken.access, '');
+      //         this.isRefreshingToken = false
+      //         console.log('nexthandle');
+      //         return next.handle(this.addToken(req, newToken.access));
+      //       }
+      //       console.log(newToken);
+      //       this.logoutUser();
+      //     }
+      //   ),
+      //   tap (newToken => this.isRefreshingToken = false)
+      // ).subscribe();
+      }
+     else {
+      return this.tokenSubject.pipe(
+        filter(token => token != null),
+        take(1),
+        switchMap(token => {
+          return next.handle(this.addToken(req, token));
+        }));
+    }
+    // return next.handle(req  );
+    
+  }
+  logoutUser() {
+    // Route to the login page (implementation up to you)
+    console.log('logout user');
+    return this.router.navigate(['login'])
+    //   return Observable.throw(new Error('not ok'));
+  }
+}

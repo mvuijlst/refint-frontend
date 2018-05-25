@@ -1,0 +1,42 @@
+<div *ngIf="person">
+<div>
+  <app-remarks [subject]="'intake'" class="text-nd"></app-remarks>
+</div>
+<h3 class="h3ref">Werkpoule</h3>
+<div class="contenttable" *ngIf="person.jobpool1">
+  <div class="contenttablerow"  *ngIf="person.jobpool1">
+    <div class="contenttablecell left"  style="width: 120px; padding-left:10px;">Eigen voorkeur :</div>
+    <div class="contenttablecell">
+      <ul>
+        <li *ngIf="person.jobtype1">{{person.jobtype1.name}}</li>
+        <li *ngIf="person.jobtype2">{{person.jobtype2.name}}</li>
+        <li *ngIf="person.jobtype3">{{person.jobtype3.name}}</li>
+        <li *ngIf="person.jobtypenot" style="color:red">Niet : {{person.jobtypenot.name}}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<h3>Professioneel</h3>
+<div class="detailtable">
+  <div class="detailtablerow">
+    <div class="detailtablecell left">Ervaring :</div>
+    <div class="detailtablecell">{{person.experience ? person.experience : ''}}</div>
+  </div>
+  <div class="detailtablerow">
+    <div class="detailtablecell left">Interesses/Hobby's :</div>
+    <div class="detailtablecell">{{person.interests ? person.interests : ''}}</div>
+  </div>
+  <div class="detailtablerow">
+    <div class="detailtablecell left">Werkervaring in BE :</div>
+    <div class="detailtablecell">{{person.workBelgium ? person.workBelgium : ''}}</div>
+  </div>
+  <div class="detailtablerow">
+    <div class="detailtablecell left">Werk bij intake :</div>
+    <div class="detailtablecell">{{person.activityIntake ? person.activityIntake : ''}}</div>
+  </div>
+  <div class="detailtablerow">
+    <div class="detailtablecell left">Amnitie/Droom :</div>
+    <div class="detailtablecell">{{person.ambitions ? person.ambitions : ''}}</div>
+  </div>
+</div>
+</div>

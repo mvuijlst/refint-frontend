@@ -1,5 +1,5 @@
 export class RefuType {
     constructor(
-        private id: number,
-        private name: string) {}
+        public id: number,
+        public name: string) {}
 }

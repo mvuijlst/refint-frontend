@@ -1,0 +1,63 @@
+<mat-toolbar color="primary">
+    <span *ngIf="job">{{job.name}}</span>
+    <span flex></span>
+    <button mat-icon-button (click)="closeMe()">
+      <mat-icon>close</mat-icon>
+    </button>
+</mat-toolbar>
+<mat-card>
+  <mat-card-content>
+      <div class="genrow" layout="row">
+        <span class="jobstatus">{{job.status.id}}</span>
+        <span>{{job.description}}</span>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="genrow" layout="row">
+          <div flex="20" class="cellleft">Organisatie</div>
+          <div flex="30" class="cellright">{{job.organisation.name}}</div>
+          <div flex="20" class="cellleft">Contact</div>
+          <div flex="30" class="cellright">{{job.contactPerson}}</div>
+      </div>
+      <div class="genrow" layout="row">
+            <div flex="20" class="cellleft">Plaats</div>
+            <div flex="30" class="cellright">
+              {{job.location.name}}<br>
+              {{job.location.addresses.length>0 ? job.location.addresses[0].address : ''}}</div>
+            <div flex="20" class="cellleft">Soort Werk</div>
+            <div flex="30" class="cellright">{{job.jobType.name}}</div>
+      </div>
+      <div class="genrow" layout="row">
+          <div flex="20" class="cellleft">Van</div>
+          <div flex="30" class="cellright">
+            {{job.datefrom | date : "dd/MM/yyyy"}}</div>
+          <div flex="20" class="cellleft">Tot</div>
+          <div flex="30" class="cellright">{{job.dateuntil | date : "dd/MM/yyyy"}}</div>
+    </div>
+    <mat-divider id="tabLastSeparator"></mat-divider>
+    <mat-tab-group [style.height.px]="tabheight">
+      <mat-tab label="Personen">
+        <app-job-persons></app-job-persons>
+      </mat-tab>
+      <mat-tab label="Berichten">
+        <app-job-messages></app-job-messages>
+      </mat-tab>
+      <mat-tab label="Opties">
+        <app-job-persons-options [jobTypeid]="job.jobType.id" *ngIf="job"></app-job-persons-options>
+      </mat-tab>
+     </mat-tab-group>
+    
+
+          <!-- <mat-list dense>
+      <h3 matLine>Organisatie</h3>
+      <mat-list-item>
+        <p matLine>{{job.organisation.name}}</p>
+      </mat-list-item>
+      <h3 matLine>Plaats</h3>
+      <mat-list-item>
+          <p matLine>{{job.location.name}}</p>
+          <p matLine *ngIf="job.location.addresses.length>0">{{job.location.addresses[0].address}}</p>
+        </mat-list-item>
+  
+    </mat-list> -->
+  </mat-card-content>
+</mat-card>

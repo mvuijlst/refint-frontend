@@ -1,0 +1,30 @@
+<td-expansion-panel-group *ngIf="messages.length > 0">
+    <td-expansion-panel 
+      *ngFor="let msg of messages"
+      class="expPanel"
+      [expand]="true" 
+      >
+      <ng-template td-expansion-panel-label>
+          <div style="margin-left : 0px;">
+          <mat-icon color="primary">{{msg.job ? 'build' : msg.event ? 'event' : 'message'}}</mat-icon>
+          <span class="jobexptitle">{{msg.subject}}</span>
+          </div>
+        </ng-template>          
+        <ng-template td-expansion-panel-sublabel>
+          <span>{{msg.created | date:'dd/MM/yyyy'}}</span>
+          <span> - {{msg.created_by.username}}</span>
+        </ng-template>      
+
+    <span style="display:flex" *ngFor="let person of msg.persons">
+    <span flex="30" class="personname">
+        <mat-icon *ngIf="person.jobConnected">done_all</mat-icon>
+        <button mat-icon-button (click)="showAddPersonJob(msg, person)" *ngIf="!person.jobConnected">
+            <mat-icon>add_circle_outline</mat-icon>
+        </button>
+        {{person.name}}</span>
+    <div class="progesswrapper" layout="row" flex="70">
+      <app-stepper-dense [details]="person.msgLogs"></app-stepper-dense>
+    </div>
+  </span>    
+    </td-expansion-panel>
+    </td-expansion-panel-group>

@@ -1,0 +1,10 @@
+<div class="progresscontainer">
+    <ul class="progressbar">
+      <li *ngFor="let detail of details let last=last" 
+        matTooltip="{{detail.tooltip}}" 
+        [ngClass]="[detail.detailType.icon + ' ' + detail.detailType.style]"
+        (click)="showLogDetail(detail)"
+        >
+      </li>
+    </ul>
+  </div>

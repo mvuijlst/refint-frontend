@@ -1,0 +1,100 @@
+<mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+    Persoonlijke gegevens
+  </mat-panel-title>
+  </mat-expansion-panel-header>
+<div class="genrow" layout="row">
+  <div flex="20" class="pad-xs text-right">Geboortedatum</div>
+  <div flex="30" class="pad-xs">{{person.birthdate | date: 'dd/MM/yyyy'}}</div>
+  <div flex="20" class="pad-xs text-right">Afkomst</div>
+  <div flex="30" class="pad-xs">{{person.homecountry ? person.homecountry.name : ''}}</div>
+</div>
+<mat-divider inset="true"></mat-divider>
+<div class="genrow" layout="row">
+  <div flex="20" class="pad-xs text-right">In België sinds</div>
+  <div flex="30" class="pad-xs">{{person.arrival | date: 'dd/MM/yyyy' }}</div>
+  <div flex="20" class="pad-xs text-right">Wet. situatie</div>
+  <div flex="30" class="pad-xs">{{person.refutype ? person.refutype.name : ''}}</div>
+</div>
+<mat-divider inset="true"></mat-divider>
+<div class="genrow" layout="row">
+    <div flex="20" class="pad-xs text-right">Rijksregisternr</div>
+    <div flex="30" class="pad-xs">{{person.rrn}}</div>
+    <div flex="20" class="pad-xs text-right">Bankrekening</div>
+    <div flex="30" class="pad-xs">{{person.bankaccount}}</div>
+</div>
+<mat-divider inset="true"></mat-divider>
+<div class="genrow" layout="row">
+    <div flex="20" class="pad-xs text-right text-md">E-mail</div>
+    <div flex="30" class="pad-xs"><a href="mailto:{{person.defaultMail}}" class="text-md text-nodecoration"> {{person.defaultMail}}</a></div>
+    <div flex="20" class="pad-xs text-right">Gsm</div>
+    <div flex="30" class="pad-xs">{{person.defaultMobile}}</div>
+</div>
+<mat-divider inset="true"></mat-divider>
+<div class="genrow" layout="row">
+    <div flex="20" class="pad-xs text-right">Adres</div>
+    <div flex="80" class="pad-xs">{{person.defaultAddress ? person.defaultAddress.address : ''}}, 
+        {{person.defaultAddress ? person.defaultAddress.postalcode : ''}}  
+        {{person.defaultAddress ? person.defaultAddress.city : ''}}</div>
+</div>
+</mat-expansion-panel>
+    <!-- <div class="detailtablerow">
+        <div class="detailtablecell left">GSM</div>
+        <div class="detailtablecell">{{person.defaultMobile}}</div>
+      </div>
+      <div class="detailtablerow">
+          <div class="detailtablecell left">E-Mail</div>
+          <div class="detailtablecell">{{person.defaultMail}}</div>
+        </div>
+        <div class="detailtablerow">
+            <div class="detailtablecell left">Rijksregisternummer</div>
+            <div class="detailtablecell">{{person.rrn}}</div>
+          </div>
+          <div class="detailtablerow">
+              <div class="detailtablecell left">Bankrekening</div>
+              <div class="detailtablecell">{{person.bankaccount}}</div>
+            </div>
+             -->
+<!-- 
+            <div class="detailtable">
+                <div class="detailtablerow">
+                  <div class="detailtablecell left">Geboren op</div>
+                  <div class="detailtablecell">{{person.birthdate | date: 'dd/MM/yyyy'}}</div>
+                </div>
+                <div class="detailtablerow">
+                  <div class="detailtablecell left">Afkomstig uit</div>
+                  <div class="detailtablecell">{{person.homecountry ? person.homecountry.name : ''}}</div>
+                </div>
+                <div class="detailtablerow">
+                  <div class="detailtablecell left">In België sinds</div>
+                  <div class="detailtablecell">{{person.arrival | date: 'dd/MM/yyyy' }}</div>
+                </div>
+                <div class="detailtablerow">
+                  <div class="detailtablecell left">Wettelijke situatie</div>
+                  <div class="detailtablecell">{{person.refutype ? person.refutype.name : ''}}</div>
+                </div>
+                <div class="detailtablerow">
+                  <div class="detailtablecell left">Adres</div>
+                  <div class="detailtablecell">{{person.defaultAddress ? person.defaultAddress.address : ''}}, 
+                    {{person.defaultAddress ? person.defaultAddress.postalcode : ''}}  
+                    {{person.defaultAddress ? person.defaultAddress.city : ''}}</div>
+                </div>
+                <div class="detailtablerow">
+                    <div class="detailtablecell left">GSM</div>
+                    <div class="detailtablecell">{{person.defaultMobile}}</div>
+                  </div>
+                  <div class="detailtablerow">
+                      <div class="detailtablecell left">E-Mail</div>
+                      <div class="detailtablecell">{{person.defaultMail}}</div>
+                    </div>
+                    <div class="detailtablerow">
+                        <div class="detailtablecell left">Rijksregisternummer</div>
+                        <div class="detailtablecell">{{person.rrn}}</div>
+                      </div>
+                      <div class="detailtablerow">
+                          <div class="detailtablecell left">Bankrekening</div>
+                          <div class="detailtablecell">{{person.bankaccount}}</div>
+                        </div>
+                        </div> -->
+                        

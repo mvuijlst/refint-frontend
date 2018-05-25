@@ -1,0 +1,32 @@
+.customheader{
+    background-color: red;
+    height:48px;
+}
+::ng-deep .td-expansion-panel-header{
+    background-color: whitesmoke !important; 
+}
+.mat-subheading-1 .mat-icon{
+        font-size: 20px;
+        vertical-align: middle;
+}
+.mat-subheading-1{
+    padding:20px;
+}
+.progesswrapper{
+    display: flex;  
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 20px;
+}
+app-message-card, app-job-card-basic{
+    width:50%;
+    margin-right: 20px;
+}
+.progresslabel .mat-icon{
+    font-size: 19px;
+    margin-left:10px;
+    vertical-align: middle;   
+}
+.jobexptitle{
+    margin-left:15px;
+}

@@ -1,3 +1,6 @@
+import { environment } from './../../../environments/environment';
+import { LanguageProficiency } from './languageproficiency.model';
+import { Address } from './address.model';
 import { Interviewer } from './interviewer.model';
 import { Country } from './country.models';
 import { JobType } from './jobtype.model';
@@ -7,6 +10,7 @@ import { Contact } from './contact.model';
 import { ContactMethod } from './contactmethods.model';
 import { KeyValue } from './keyvalue.model';
 import { KeyValueDescription } from './keyvaluedesc.model';
+import { Remark } from './remark.model';
 
 export class Person {
     public id: number;
@@ -52,10 +56,15 @@ export class Person {
     public created: Date;
     public modified: Date;
     public contacts: Contact[] = [];
+    public addresses: Address[] = [];
+    public languages: LanguageProficiency[] = [];
+    public defaultAddress: Address;
     public defaultMobile: string;
     public defaultMail: string;
+    public personremarks: Remark[] = [];
     constructor(person: any) {
         this.firstName = (person['firstname']) ? person['firstname'] : '';
+        this.birthdate = (person['birthdate']) ? person['birthdate'] : '';
         this.lastName = (person['lastname']) ? person['lastname'] : '';
         this.id = (person['id']) ? person['id'] : 0;
         this.number = (person['number']) ? person['number'] : '';
@@ -82,11 +91,24 @@ export class Person {
         this.outcome = person['outcome'];
         this.created = person['created'];
         this.modified = person['modified'];
+        this.experience = person['experience'];
+        this.remarks = person['remarks'];
+        if (person['refutype']) {
+            this.refutype = new RefuType(person['refutype']['id'], person['refutype']['name']);
+        } else {
+            this.refutype = new RefuType(0, 'ongekend');
+        }
         if (person['familySituation']) {
             this.familySituation = new KeyValue(person['familySituation']['id'], person['familySituation']['name']);
         }
         if (person['homecountry']) {
             this.homecountry = new KeyValue(person['homecountry']['id'], person['homecountry']['name']);
+        }
+        if (person['personaddresses']){
+            for (const add of person['personaddresses']) {
+                this.addresses.push(new Address(add));
+            }
+            this.defaultAddress = this.getAddress();
         }
         if (person['contacts']) {
             for (const contact of person['contacts']) {
@@ -106,60 +128,66 @@ export class Person {
             this.defaultMail = this.getContactMethod('E-mail');
             this.defaultMobile = this.getContactMethod('GSM');
         }
+        if (person['personremarks']) {
+            person['personremarks'].forEach(remark => {
+                this.personremarks.push(new Remark(remark));
+            });
+        }
         if (person['interviewer']) {
             this.interviewer = new KeyValue(person['interviewer']['id'], person['interviewer']['name']);
         }
         if (person['jobtype1']) {
-            this.jobtype1 = new JobType(
-                person['jobtype1']['id'],
-                person['jobtype1']['name'],
-                person['jobtype1']['description']);
+            this.jobtype1 = new JobType(person['jobtype1']);
         }
         if (person['jobtype2']) {
-            this.jobtype2 = new JobType(
-                person['jobtype2']['id'],
-                person['jobtype2']['name'],
-                person['jobtype2']['description']);
+            this.jobtype2 = new JobType(person['jobtype2']);
         }
         if (person['jobtype3']) {
-            this.jobtype3 = new JobType(
-                person['jobtype3']['id'],
-                person['jobtype3']['name'],
-                person['jobtype3']['description']);
+            this.jobtype3 = new JobType(person['jobtype3']);
         }
         if (person['jobtypenot']) {
-            this.jobtypenot = new JobType(
-                person['jobtypenot']['id'],
-                person['jobtypenot']['name'],
-                person['jobtypenot']['description']);
+            this.jobtypenot = new JobType(person['jobtypenot']);
         }
         if (person['jobpool1']) {
-            this.jobpool1 = new JobType(
-                person['jobpool1']['id'],
-                person['jobpool1']['name'],
-                person['jobpool1']['description']);
+            this.jobpool1 = new JobType(person['jobpool1']);
         }
         if (person['jobpool2']) {
-            this.jobpool2 = new JobType(
-                person['jobpool2']['id'],
-                person['jobpool2']['name'],
-                person['jobpool2']['description']);
+            this.jobpool2 = new JobType(person['jobpool2']);
         }
         if (person['jobpool3']) {
-            this.jobpool3 = new JobType(
-                person['jobpool3']['id'],
-                person['jobpool3']['name'],
-                person['jobpool3']['description']);
+            this.jobpool3 = new JobType(person['jobpool3']);
         }
+        if (person['languages']) {
+            for (const lang of person['languages']) {
+                this.languages.push(new LanguageProficiency(lang));
+            }
+        }
+        // console.log(this.foto);
 
     }
 
-    getContactMethod(name: string) {
+    getContactMethod(name: string): string {
         if (this.contacts) {
             return this.contacts.find(contact => contact.contactMethod.name === name && contact.valid === true) ?
                 this.contacts.find(contact => contact.contactMethod.name === name && contact.valid === true).contactData : '';
         } else {
             return '';
         }
+    }
+    getAddress(): Address {
+        if (this.addresses.length > 0) {
+            return this.addresses.find(add => add.valid === true );
+        }
+        return new Address(
+            {
+                'address' : 'ongekend',
+                'postalcode' : '',
+                'city' : '',
+                'dateuntil' : '',
+                'datefrom' : '',
+                'valid' : false,
+                'remarks' : ''
+            }
+        );
     }
 }

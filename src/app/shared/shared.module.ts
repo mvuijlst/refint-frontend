@@ -3,6 +3,7 @@ import { CommonModule, } from '@angular/common';
 import { Http, HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule, } from '@angular/forms';
+import { CdkTableModule } from '@angular/cdk/table';
 
 import { CovalentCommonModule } from '@covalent/core/common';
 import { CovalentSearchModule } from '@covalent/core/search';
@@ -15,6 +16,7 @@ import { CovalentNotificationsModule } from '@covalent/core/notifications';
 import { CovalentMenuModule } from '@covalent/core/menu';
 import { CovalentPagingModule } from '@covalent/core/paging';
 import { CovalentStepsModule } from '@covalent/core/steps';
+import { CovalentMessageModule } from '@covalent/core/message';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -34,8 +36,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
-
-
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { CovalentExpansionPanelModule } from '@covalent/core/expansion-panel';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatExpansionModule, MatTableModule, MatSortModule } from '@angular/material';
+import { StepperDenseComponent } from './message-stepper/stepper-dense/stepper-dense.component';
 
 const ANGULAR_MODULES: any[] = [
   FormsModule, ReactiveFormsModule, HttpModule, HttpClientModule,
@@ -46,14 +51,16 @@ const MATERIAL_MODULES: any[] = [
   MatListModule, MatDividerModule, MatMenuModule, MatTooltipModule,
   MatSlideToggleModule, MatInputModule, MatCheckboxModule,
   MatToolbarModule, MatSnackBarModule, MatSidenavModule,
-  MatTabsModule, MatSelectModule, MatRadioModule, MatGridListModule, MatDialogModule
+  MatTabsModule, MatSelectModule, MatRadioModule, MatGridListModule,
+   MatDialogModule, MatDatepickerModule,MatMomentDateModule, MatExpansionModule,
+   MatTableModule, MatSortModule,
 ];
 
 const COVALENT_MODULES: any[] = [
   CovalentDataTableModule, CovalentMediaModule, CovalentLoadingModule,
   CovalentNotificationsModule, CovalentLayoutModule, CovalentMenuModule,
   CovalentPagingModule, CovalentSearchModule, CovalentStepsModule,
-  CovalentCommonModule, CovalentDialogsModule,
+  CovalentCommonModule, CovalentDialogsModule, CovalentExpansionPanelModule, CovalentMessageModule
 ];
 
 const CHART_MODULES: any[] = [
@@ -62,15 +69,14 @@ const CHART_MODULES: any[] = [
 @NgModule({
   imports: [
     CommonModule,
+    CdkTableModule,
     ANGULAR_MODULES,
     MATERIAL_MODULES,
     COVALENT_MODULES,
     CHART_MODULES,
   ],
-  declarations: [
-
-  ],
   exports: [
+    CdkTableModule,
     ANGULAR_MODULES,
     MATERIAL_MODULES,
     COVALENT_MODULES,

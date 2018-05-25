@@ -1,7 +1,10 @@
 
 export class Interviewer {
-    constructor(
-        private id: number,
-        private name: string,
-    ) {}
+    public id: number;
+    public name: string;
+
+    constructor(interviewer: any){
+        this.id = interviewer['id'];
+        this.name = interviewer['name'];
+    }
 }

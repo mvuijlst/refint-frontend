@@ -1,0 +1,72 @@
+<td-expansion-panel-group *ngIf="messages.length>0">
+  <td-expansion-panel *ngFor="let msg of newMessages" class="expPanel" [expand]="false" >
+    <ng-template td-expansion-panel-label>
+      <div>
+      <mat-icon color="primary">{{msg.job ? 'build' : msg.event ? 'event' : 'message'}}</mat-icon>
+      <span class="jobexptitle">{{msg.subject}}</span>
+      </div>
+    </ng-template>          
+    <ng-template td-expansion-panel-sublabel>
+      <span>{{msg.created | date:'dd/MM/yyyy'}}</span>
+      <span> - {{msg.created_by.username}}</span>
+    </ng-template>
+    <td-expansion-summary>
+      <div>
+          <div class="mat-subheading-1">
+              <div flex layout-gt-xs="row" layout-align="start center">
+                <span  *ngIf="msg.job" flex="10">Job</span>
+                <span *ngIf="msg.job" flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+                <span *ngIf="msg.job" flex="30">{{msg.job.name}}</span>
+                <span *ngIf="msg.event" flex="10">Event</span>
+                <span *ngIf="msg.event" flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+                <span *ngIf="msg.event" flex="30">{{msg.event.name}}</span>
+                <span *ngIf="!msg.job && !msg.event" flex="10">Andere</span>
+                <span *ngIf="!msg.job && !msg.event" flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+                <span *ngIf="!msg.job && !msg.event" flex="30">?</span>
+                <span flex="10">Aantal</span>
+                <span flex="5"  hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+                <span flex="30">{{msg.personCount}}</span>
+              </div>
+              <div flex layout-gt-xs="row" layout-align="start center">
+                  <span flex="10">Mail</span>
+                  <span flex="5" hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+                  <span flex="30">{{msg.mailCount}}</span>
+                  <span flex="10">SMS</span>
+                  <span flex="5"  hide-xs><mat-icon class="tc-grey-500">chevron_right</mat-icon></span>
+                  <span flex="30">{{msg.smsCount}}</span>
+                </div>
+            </div>
+
+      </div>    
+    </td-expansion-summary>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Details
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div layout="row">
+        <app-message-card [message]="msg"></app-message-card>
+        <app-job-card-basic [job]="msg.job" [personids]="msg.job.personsId" *ngIf="msg.job"></app-job-card-basic>
+      </div>
+    </mat-expansion-panel>
+    <div *ngFor="let person of msg.persons">
+      <div class="progesswrapper" layout="row">
+        <span class="progresslabel" flex="15">{{person.lastName}}, {{person.firstName}}
+          <mat-icon *ngIf="person.jobConnected">done_all</mat-icon>
+        </span>
+        <app-message-stepper [details]="person.msgLogs" flex></app-message-stepper>
+        <span>
+            <button mat-icon-button color="primary" (click)="showAddDetail(msg, person)">
+              <mat-icon>add_comment</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="showAddPersonJob(msg, person)" *ngIf="!person.jobConnected">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+          </span>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </td-expansion-panel>
+</td-expansion-panel-group>
+<td-message label="Info" sublabel="Geen berichten aanwezig" color="primary" icon="info" *ngIf="messages.length===0"></td-message>

@@ -1,0 +1,22 @@
+<mat-card *ngIf="message" style="width:100%">
+    <mat-card-title>{{message.subject}}</mat-card-title>
+    <mat-card-content>
+      aangemaakt door : {{message.created_by.username}} op : {{message.created | date : 'dd/MM/yyyy'}} | 
+      SMS : {{message.smsCount}} Mail : {{message.mailCount}}
+      <div>
+      <mat-list>
+          <mat-list-item>
+          <h3 matLine>SMS : <span class="text-md">{{message.infolink_sms? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_sms? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</span></h3>
+          <p matLine> {{message.message_sms? message.message_sms : 'geen SMS'}} </p>
+          <!-- <p matLine> {{message.infolink_sms? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_sms? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</p> -->
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-list-item>
+            <h3 matLine>Mail : <span class="text-md">{{message.infolink_mail? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_mail? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</span></h3>
+            <p matLine> {{message.message_mail ? message.message_mail : 'geen mail'}} </p>
+            <!-- <p matLine> {{message.infolink_mail? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_mail? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</p> -->
+          </mat-list-item>
+        </mat-list>
+      </div>
+  </mat-card-content>
+  </mat-card>

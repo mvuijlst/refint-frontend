@@ -1,9 +1,12 @@
+import { environment } from './../../environments/environment';
+import { Status } from './../shared/models/status.model';
+import { SideNavService } from './../shared/services/sidenav.service';
 import { JobType } from './../shared/models/jobtype.model';
 import { JobTypeService } from './../shared/services/jobtype.service';
 import { Observable } from 'rxjs/Observable';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
 import { PersonService } from './../shared/services/person.service';
-import { Component, OnInit, ViewChild, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, SimpleChanges, OnChanges } from '@angular/core';
 import { Person } from '../shared/models/person.model';
 import {
   ITdDataTableColumn,
@@ -12,7 +15,8 @@ import {
   TdDataTableSortingOrder,
   TdDataTableService,
   ITdDataTableRowClickEvent,
-  ITdDataTableSelectEvent
+  ITdDataTableSelectEvent,
+  ITdDataTableSelectAllEvent
 } from '@covalent/core/data-table';
 import { TdMediaService } from '@covalent/core/media';
 import { Subscription } from 'rxjs/Subscription';
@@ -26,36 +30,57 @@ import { TdLayoutManageListToggleDirective } from '@covalent/core/layout';
   templateUrl: './persons.component.html',
   styleUrls: ['./persons.component.scss']
 })
-export class PersonsComponent implements OnInit, OnDestroy {
+export class PersonsComponent implements OnInit, OnDestroy{
+
   persons: Person[] = [];
   filteredPersons: Person[] = [];
   jobTypes: JobType[] = [];
-  filteredTotal: number = this.persons.length;
-
-  gridCols = 4;
-
-  private personsSubscription: Subscription = Subscription.EMPTY;
-  private screenSubscription: Subscription = Subscription.EMPTY;
-  private selectedPersonsSubscription: Subscription = Subscription.EMPTY;
-  private jobtypesSubscription: Subscription = Subscription.EMPTY;
-
   selectedJobTypes: JobType[] = [];
+  selectedPersons: Person[] = [];
+
+  filteredTotal: number = this.persons.length;
+  baseUrl = environment.apiUrl;
+  
+  //toolbar
   onlyActive = true;
   onlySelected = false;
   searchTerm = '';
-  currentPage = 1;
-  fromRow = 1;
-  pageSize = 500;
-  selectedPersons: Person[] = [];
-  gridView = true;
-  personSelected = false;
 
-  // datatable stuff
-  @ViewChild('dataTable') private datatable: TdDataTableComponent;
-  @ViewChild('endNav') private endNav: MatSidenav;
+  //navigation stuff
+  rightNavOpened = false;
+  rightNavWidth = 0;
+  tableHeight = 400;
+
 
   sortBy = 'firstName';
   sortOrder: TdDataTableSortingOrder = TdDataTableSortingOrder.Descending;
+  // find out if needed
+  // currentPage = 1;
+  // fromRow = 1;
+  // pageSize = 500;
+  // personSelected = false;
+
+
+  gridView = true;
+  gridCols = 4;
+  gridFinished = false;
+  
+  private personsSubscription: Subscription = Subscription.EMPTY;
+  private selectedPersonsSubscription: Subscription = Subscription.EMPTY;
+  private onlySelectedSubscription: Subscription = Subscription.EMPTY;
+  private jobtypesSubscription: Subscription = Subscription.EMPTY;
+  private sidenavSubscription: Subscription = Subscription.EMPTY;
+  private gridColsSubscription: Subscription = Subscription.EMPTY;
+  private rightNavWidthSubscription: Subscription = Subscription.EMPTY;
+  private gridViewSubscrption: Subscription = Subscription.EMPTY;
+  private tableHeightSubscrption: Subscription = Subscription.EMPTY;
+
+
+  
+  // datatable stuff
+  // @ViewChild('dataTable') private datatable: TdDataTableComponent;
+  // @ViewChild('endNav') private endNav: MatSidenav;
+
 
   columns: ITdDataTableColumn[] = [
     { name: 'number', label: 'NR', sortable: true, width: 80, filter: false },
@@ -66,6 +91,16 @@ export class PersonsComponent implements OnInit, OnDestroy {
     { name: 'defaultMail', label: 'EMAIL', sortable: true, filter: false, hidden: false },
 
   ];
+  constructor(
+    private media: TdMediaService,
+    private personService: PersonService,
+    private _dataTableService: TdDataTableService,
+    // private ngZone: NgZone,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private jobtypeService: JobTypeService,
+    private sideNavService: SideNavService,
+  ) { }
 
   sort(sortEvent: ITdDataTableSortChangeEvent): void {
     this.sortBy = sortEvent.name;
@@ -80,13 +115,12 @@ export class PersonsComponent implements OnInit, OnDestroy {
 
   filterActive(): void {
     this.onlyActive = !this.onlyActive;
-    console.log('filter');
     this.filter();
   }
   filterSelected(e): void {
-    this.onlySelected = !this.onlySelected;
+    this.sideNavService.onlySelectedPersons.next(!this.onlySelected);
+    // this.onlySelected = !this.onlySelected;
     this.filter();
-    console.log(e);
   }
 
   filter(): void {
@@ -109,8 +143,6 @@ export class PersonsComponent implements OnInit, OnDestroy {
       });
       const jobtypes = this.selectedJobTypes;
       if (jobtypes.length > 0) {
-        console.log('extra filter');
-
         newData = newData.filter(function(d) {
           let personfound = false;
           personfound = !personfound ? d.jobpool1 ? jobtypes.some(j => j.id === d.jobpool1.id) : false : true;
@@ -121,106 +153,126 @@ export class PersonsComponent implements OnInit, OnDestroy {
         }
     this.filteredTotal = newData.length;
     newData = this._dataTableService.sortData(newData, this.sortBy, this.sortOrder);
-    newData = this._dataTableService.pageData(newData, this.fromRow, this.currentPage * this.pageSize);
     this.filteredPersons = newData;
-    console.log(this.filteredPersons);
   }
 
-  rowCLick(person): void {
+  rowClick(person): void {
+    const pers:Person = person.row ? person.row : person;
+    this.personService.selectedPerson.next(pers);
     this.router.navigate(['persons', 'person']);
-    console.log(person.row);
-    setTimeout(() => {this.personService.selectedPerson.next(person.row); }, 100 );
-    if (!this.endNav.opened){
-      this.personSelected = true;
-        this.endNav.toggle();
-    }
+    this.sideNavService.toggleRightNav('person-card');
   }
-  toggleContact(): void{
+
+  
+  toggleContact(): void {
     this.router.navigate(['persons', 'contact']);
-    console.log('togglecontact');
+    this.sideNavService.toggleRightNav('contact');
     this.onlySelected = true;
     this.filter();
-    setTimeout(() => {this.personService.selectedPersons.next(this.selectedPersons); }, 100 );
-    if (!this.endNav.opened){ this.endNav.open();}
+    this.personService.selectedPersons.next(this.selectedPersons); 
   }
 
   toggleView() {
-    this.gridView = !this.gridView;
+    this.gridFinished = false;
+    this.sideNavService.toggleGridView();
   }
 
-  watchScreen(): void {
-    this.screenSubscription = this.media.registerQuery('xs').subscribe((matches: boolean) => {
-      this.ngZone.run(() => {
-        this.gridCols = matches ? 1 : 2;
-      });
-    });
-  }
+  // getStatusColor(person: Person) {
+  //   return 'grid_status ' + person.status;
+  // }
+
 
   checkSelectedRows(e): boolean{
     return this.selectedPersons.findIndex(person => person === e) !== -1;
   }
 
-  handleJobTypeChange(e) {
-    console.log('jobtype');
-    console.log(this.selectedJobTypes);
-    console.log(e);
-    this.filter();
-  }
+
+  // handleJobTypeChange(e) {
+  //   this.filter();
+  // }
+
   private handleSelectPerson(checked: boolean, person: Person){
-    console.log(this.selectedPersons);
     if (checked) {
       if (this.selectedPersons.findIndex(pers => pers === person) === -1) {
         this.selectedPersons.push(person);
       }
     } else {
       const ind = this.selectedPersons.findIndex(pers => pers === person);
-      console.log(ind);
-      console.log(this.selectedPersons);
       if (ind !== -1) {
-        console.log('slice');
         this.selectedPersons.splice(ind, 1);
       }
     }
-    console.log(this.selectedPersons);
     this.personService.selectedPersons.next(this.selectedPersons);
-    console.log(this.personService.selectedPersons);
     this.filter();
 
   }
 
-  rowClick(event: ITdDataTableSelectEvent) {
-    this.handleSelectPerson(event.selected, event.row);
+  selectAll(event: ITdDataTableSelectAllEvent) {
+    if (event.selected){
+      this.selectedPersons = event.rows;
+    } else{
+      this.selectedPersons = []
+    }
+
+    this.personService.selectedPersons.next(this.selectedPersons);
+
+  }
+
+  rowSelect(e, pers: Person): void {
+    this.handleSelectPerson(e.selected, pers);
   }
 
   cbxClick(cbx: MatCheckbox, pers: Person): void {
     this.handleSelectPerson(cbx.checked, pers);
   }
 
-  constructor(
-    private media: TdMediaService,
-    private personService: PersonService,
-    private _dataTableService: TdDataTableService,
-    private ngZone: NgZone,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private jobtypeService: JobTypeService
-  ) { }
-
   ngOnInit() {
-    this.personsSubscription = this.personService.getPersons().subscribe(
-        (persons: Person[]) => {this.persons = persons; this.filter(); this.watchScreen(); }
-      );
-    this.jobtypesSubscription = this.jobtypeService.getJobTypes().subscribe(
+    this.personsSubscription = this.personService.persons.subscribe(
+        (persons: Person[]) => {this.persons = persons; this.filter(); }
+    );
+
+    this.jobtypesSubscription = this.jobtypeService.jobTypes.subscribe(
       (jobtypes: JobType[]) => {this.jobTypes = jobtypes; }
     );
+    this.selectedPersonsSubscription = this.personService.selectedPersons.subscribe(
+      selPers => this.selectedPersons = selPers
+    )
+    this.sidenavSubscription = this.sideNavService.rightNavOpened.subscribe(opened => this.rightNavOpened = opened);
+    
+    this.gridColsSubscription = this.sideNavService.gridCols.subscribe(nr => this.gridCols = nr);
+    
+    this.rightNavWidthSubscription = this.sideNavService.rightNavWidth.subscribe(
+      (nr) => {
+        this.rightNavWidth = nr;
+      });
+    
+    
+    this.gridViewSubscrption = this.sideNavService.gridView.subscribe(opened => this.gridView = opened);
+    
+    this.tableHeightSubscrption = this.sideNavService.tableHeight.subscribe(height => this.tableHeight = height);
+    
+    this.sideNavService.windowResize();
+
+    this.onlySelectedSubscription = this.sideNavService.onlySelectedPersons.subscribe(only => {
+      this.onlySelected = only;
+      this.filter();  
+   })
   }
-  ngOnDestroy(){
-    if (this.personsSubscription){
-      this.personsSubscription.unsubscribe();
-    }
-    if (this.screenSubscription){
-    this.screenSubscription.unsubscribe();
-    }
+  gridfinished(){
+    setTimeout(() => {
+      this.gridFinished = true;
+    },1000); 
+  }
+
+  ngOnDestroy() {
+    this.sideNavService.toggleRightNav('close');
+    this.personsSubscription.unsubscribe();
     this.jobtypesSubscription.unsubscribe();
+    this.sidenavSubscription.unsubscribe();
+    this.gridColsSubscription.unsubscribe();
+    this.tableHeightSubscrption.unsubscribe();
+    this.gridViewSubscrption.unsubscribe();
+    this.rightNavWidthSubscription.unsubscribe();
+    this.selectedPersonsSubscription.unsubscribe();
   }
 }

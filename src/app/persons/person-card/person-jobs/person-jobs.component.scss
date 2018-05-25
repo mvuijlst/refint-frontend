@@ -1,0 +1,14 @@
+.progesswrapper{
+    display: flex;  
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 20px;
+}
+.progresslabel .mat-icon{
+    font-size: 19px;
+    margin-left:10px;
+    vertical-align: middle;   
+}
+.progresslabel{
+    max-width: 50%;
+}

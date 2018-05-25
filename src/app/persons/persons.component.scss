@@ -1,16 +1,87 @@
 .grid-card{
-    border: 1px solid rgba(0,0,0,0.125);
-    width:100%;
-    vertical-align: top;
+    // display: inline-block;
+   width:100%;
+   margin:5px;
+   height:90%;
+   vertical-align: top;
+   overflow:hidden;
+   border:1
 }
-.grid-card img {
-    width: 20%;
-    height: auto;
-  }
+
+  .grid-status {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
 .gridview{
     margin-top: 10px;
 }
-// .td-paging-bar{
-//     height: 10%;
-//     max-height : 20%;
+::ng-deep .mat-checkbox-layout .mat-checkbox-label {
+    font-size:14px !important;
+}
+
+::ng-deep mat-select{
+    font-size: 14px;   
+}
+
+td-search-box{
+    vertical-align: middle;
+    font-size:14px !important;
+}
+.page-footer {
+    font-size: 14px;
+    text-align: right;
+    padding:5px 20px;
+}
+.floatCheckBox{
+    position: absolute;
+
+}
+.floatStatus{
+    position: absolute;
+    top: 190px;
+    left : 15px;
+    background-color:#27ae60;
+    height:30px;
+    width:30px; 
+    line-height: 30px; 
+    display:block; 
+    text-align: center;
+    margin: 0 auto 10px auto; 
+    border-radius: 50%; 
+    background-color:#27ae60;
+    color:white;    
+}
+.cardcolimg{display: flex; }
+.cardcol{display: flex}
+.colcontent{
+    display:flex;
+    padding: 5px;
+}
+// .colcontent span{
+//     display:flex;
+//     padding: 5px;
 // }
+.colcontentbottom{
+    display: flex;
+    align-self: flex-end;
+
+}
+.colcontentremark{
+    display: flex;
+    flex:1;    
+    overflow: hidden;
+}
+.poolul{
+    margin:0px;
+
+}
+.poolli{
+    margin:0px;
+}
+app-last-remark{
+    display: flex;
+    flex:1;
+    align-items: flex-end;
+    overflow: hidden;
+}

@@ -1,0 +1,23 @@
+<mat-list dense>
+  <mat-list-item *ngFor="let pers of personJobs">
+      <span flex="20">
+      <a [routerLink]="['/persons/person']" [queryParams]="{id: pers.person}">
+        {{personService.getPersonName(pers.person)}} 
+      </a>
+    </span>
+    <span  flex="20">
+        {{pers.datefrom | date : "dd/MM/yy"}} - 
+        {{pers.dateuntil | date : "dd/MM/yy"}}
+    </span>
+    <span  flex="60" *ngIf="pers.comments">
+        {{pers.comments}}
+    </span>
+    <mat-divider [inset]="true"></mat-divider>
+  </mat-list-item>
+</mat-list>
+<div class="buttonrow">
+  <button mat-raised-button color="primary" (click)="contactPersons()">
+    contacteer
+  </button>
+
+</div>

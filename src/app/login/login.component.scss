@@ -1,0 +1,21 @@
+.login-card{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:300px;
+}
+.login-card-wrapper{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+}
+.mat-icon-login{
+    height:60px;
+    display:initial;
+}
+.mat-error{
+    width:90%;
+}

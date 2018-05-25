@@ -1,62 +1,132 @@
 <mat-toolbar>
-  <div>
+  <span>
     <button mat-button color="primary" (click)="toggleContact()">Contact</button>
     <button mat-button>Nieuw</button>
-  </div>
-
+  </span>
   <span flex></span>
-  <td-search-box backIcon="arrow_back" class="push-right-sm" placeholder="Search here" (searchDebounce)="search($event)" flex></td-search-box>
-  <div>
-    <mat-form-field>
+  <td-search-box 
+      backIcon="arrow_back" 
+      class="push-right-sm"
+      placeholder="Search here" 
+      (searchDebounce)="search($event)" flex></td-search-box>
+    <div>&nbsp;&nbsp;
+    <mat-form-field floatLabel = "never">
         <mat-select placeholder="Poules" 
-        (selectionChange)="handleJobTypeChange($event)"
+        (selectionChange)="filter()"
         [(ngModel)] = "selectedJobTypes"
         multiple>
           <mat-option *ngFor="let jobtype of jobTypes" [value]="jobtype">{{jobtype.name}}</mat-option>
         </mat-select>
     </mat-form-field>
-        <mat-checkbox [checked]="onlySelected" (change)="filterSelected($event)" color="primary">
-          <mat-label>Selected</mat-label>
-        </mat-checkbox>
-  &nbsp;
-    <mat-checkbox [checked]="onlyActive" (change)="filterActive($event)" color="primary">
+    &nbsp;&nbsp;
+    <mat-checkbox [checked]="onlySelected" (change)="filterSelected($event)" color="primary">
+      <mat-label>Selected</mat-label>
+    </mat-checkbox>
+    &nbsp;&nbsp;
+    <mat-checkbox [checked]="onlyActive" (change)="filterActive()" color="primary">
       <mat-label>Actief</mat-label>
     </mat-checkbox>
-  </div>
   <button mat-icon-button (click)="toggleView()">
-    <mat-icon *ngIf="!gridView">view_list</mat-icon>
-    <mat-icon *ngIf="gridView">grid_on</mat-icon>
+    <mat-icon *ngIf="!gridView">grid_on</mat-icon>
+    <mat-icon *ngIf="gridView">view_list</mat-icon>
   </button>
+</div>
 </mat-toolbar>
 <mat-sidenav-container layout-fill>
   <mat-sidenav mode="over"></mat-sidenav>
-  <mat-sidenav position="end" #endNav mode="side" class="rightContent">
+  <mat-sidenav position="end" 
+    #endNav 
+    mode="side" 
+    class="rightContent" 
+    [opened]="rightNavOpened"
+    [style.width.px] = "rightNavWidth"
+    [style.height.px] = "tableHeight"
+    >
     <div>
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav>
-  <mat-sidenav-content class="no-sidenav">
-    <td-data-table #dataTable [data]="filteredPersons" [columns]="columns" [selectable]="true" [clickable]="true" [multiple]="true"
-      [sortable]="true" [sortBy]="sortBy" (sortChange)="sort($event)" [sortOrder]="sortOrder"
-      [style.height.%]="88" (rowClick)="rowCLick($event)" (rowSelect)="rowClick($event)" *ngIf="gridView">
+  <mat-sidenav-content class="no-sidenav" #content>
+    <ng-template tdLoading [tdLoadingUntil]="((gridFinished && gridView) || !gridView)" 
+    tdLoadingStrategy="overlay" tdLoadingType="linear">
+    <td-data-table #dataTable 
+      [data]="filteredPersons" 
+      [columns]="columns" 
+      [selectable]="true" 
+      [clickable]="true" 
+      [multiple]="true"
+      [sortable]="true" 
+      [sortBy]="sortBy" 
+      (sortChange)="sort($event)" 
+      [sortOrder]="sortOrder" 
+      [style.height.px]="tableHeight" 
+      (rowClick)="rowClick($event)" 
+      (rowSelect)="rowSelect($event, $event.row)" 
+      (selectAll)="selectAll($event)"
+      *ngIf="!gridView"
+      [ngModel]="selectedPersons"
+      >
     </td-data-table>
-    <div *ngIf="!gridView">
-      <mat-grid-list [cols]="gridCols" flex rowHeight="2:1" [gutterSize]="5">
-        <mat-grid-tile *ngFor="let person of filteredPersons">
-          <mat-card class="grid-card">
-            <mat-card-title>
-              <mat-checkbox [checked]="checkSelectedRows(person)" (change)="cbxClick($event, person)"></mat-checkbox>
-              {{person.firstName}}
-            </mat-card-title>
-            <mat-card-subtitle>{{person.lastName}}
-            </mat-card-subtitle>
-            <mat-divider></mat-divider>
-            <mat-card-content>
-              <img src="http://www.placehold.it/150x200" alt="Card image cap"> card content
-            </mat-card-content>
-          </mat-card>
+    <div *ngIf="gridView" class="grid-height" [style.height.px]="tableHeight">
+      <mat-grid-list [cols]="gridCols" rowHeight="250px" [gutterSize]="5">
+        <mat-grid-tile *ngFor="let person of filteredPersons; let last = last">
+            <div class="grid-card mat-elevation-z2" layout="row">
+              <div class="cardcolimg">
+                <app-person-tile [person]="person" [ready]="last" (done)="gridfinished()"></app-person-tile>
+              <!-- <img #pic [src]="person.foto"
+                (error)="pic.src='http://www.placehold.it/150x200'"
+              > -->
+              <!-- <img #pic [src]="'http://www.placehold.it/150x200'"
+                (error)="pic.src='http://www.placehold.it/150x200'"
+              > -->
+              <span class="floatCheckBox">
+                  <mat-checkbox 
+                    [checked]="checkSelectedRows(person)" 
+                    (change)="cbxClick($event, person)">
+                  </mat-checkbox>
+                </span>
+                <span class="floatStatus">
+                  
+                    {{person.status}}
+                  </span>
+                </div>
+              <div flex class="cardcol" layout="column" (click)="rowClick(person)">
+                <div class="colcontent">
+                    <span class="text-lg" flex="70"><b>{{person.lastName}}</b></span>
+                    <span class="text-right" flex="30">{{person.number}}</span>
+                </div>
+                <div class="colcontent">
+                    <span class="text-md" flex="30">{{person.firstName}}</span> 
+                    <span class="text-right" flex="70">
+                        <div style="display: inline-table;">
+                            <div style="display: block; font-size:12px; padding:2px;">{{person.defaultMobile}}
+                            </div>
+                            <mat-divider [inset]="true"></mat-divider>
+                            <div style="display: block; font-size:12px; padding:2px;">{{person.defaultMail}}&nbsp;</div>
+                           </div>
+                    </span>
+                </div>
+                <mat-divider></mat-divider>
+                <div *ngIf="person.jobpool1" class="text-md pad-xs"><b>Poules</b></div>
+                <div class="colcontent">
+                    <ul class="poolul text-md">
+                        <li class="poolli" *ngIf="person.jobpool1">{{person.jobpool1.name}}</li>
+                        <li class="poolli" *ngIf="person.jobpool2">{{person.jobpool2.name}}</li>
+                        <li class="poolli" *ngIf="person.jobpool3">{{person.jobpool3.name}}</li>
+                      </ul>
+                </div>
+                <div class="colcontentremark" *ngIf="person.personremarks">
+                    <app-last-remark [remarks]="person.personremarks" [onlySticky]="false" class="text-md"></app-last-remark>
+                </div>
+              </div>
+            </div>
+
         </mat-grid-tile>
       </mat-grid-list>
     </div>
+    <div class="page-footer" color="primary">
+        selected : {{selectedPersons.length}} / filtered : {{filteredPersons.length}} / total : {{persons.length}}
+      </div>
+    </ng-template>
   </mat-sidenav-content>
 </mat-sidenav-container>

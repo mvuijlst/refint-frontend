@@ -1,0 +1,15 @@
+.contenttable{
+    display: table;
+    color:rgba(0, 0, 0, 0.54);
+    // width : 80%;
+}
+.contenttablerow {
+    width: 100%;
+    display: table-row;
+}
+.contenttablecell {
+    display: table-cell;
+}
+.contenttablecell.left{
+    text-align: right;
+}

@@ -1,0 +1,45 @@
+
+
+.matcardheader{
+    display: flex;
+    flex-direction: row;
+}
+.matavatar{
+    max-height: 250px;
+}
+
+
+.mat-card-subtitle{
+    width:100%;
+}
+.mat-card-title{
+    width:100%;
+}
+
+.mat-tab-body-content {
+    .h3ref{
+        margin:5px !important;
+    }
+}
+
+.jobexptitle{
+    color :rgba(0, 0, 0, 0.54);
+    font-size:15px;
+    padding:15px;
+    
+}
+.expicon {
+        font-size:18px !important; 
+}
+.expicon.ok{
+    color:#43a047;
+}
+.expPanel {
+    color :rgba(0, 0, 0, 0.54);
+    // .mat-card{
+    //     width: 95%;
+    // }
+}
+app-last-remark{
+    padding: 10px;
+}

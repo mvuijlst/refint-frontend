@@ -1,22 +1,33 @@
-<h1 mat-dialog-title>Login</h1>
-<div mat-dialog-content>
-<form [formGroup]="form">
-  <fieldset>
-      <legend>Login</legend>
-      <div class="form-field">
-          <label>login:</label>
-          <input name="username" formControlName="username">
-      </div>
-      <div class="form-field">
-          <label>Password:</label>
-          <input name="password" formControlName="password" 
-                 type="password">
-      </div>
-  </fieldset>
-  <div class="form-buttons">
-      <button class="button button-primary" 
-              (click)="login()">Login</button>
-        <button (click)="refreshToken()">refresh </button>
-  </div>
-</form>
+<!-- <h1 mat-dialog-title>Login</h1>
+<div mat-dialog-content> -->
+
+<form [formGroup]="loginForm">
+    <div class="login-card-wrapper">
+    <mat-card class="login-card">
+        <mat-card-title color="accent">
+            <!-- <mat-icon [routerLink]="['/']" class="mat-icon-logo cursor-pointer mat-icon-login" svgIcon="assets:refulogoblue"></mat-icon> -->
+            Ref-Interim Login
+        </mat-card-title>
+        <mat-card-content>
+            <td-message 
+                label="Error!" 
+                sublabel="{{error}}" 
+                color="warn" 
+                icon="error"
+                *ngIf="error"></td-message>            
+             <div class="text-center push"> 
+            <mat-form-field>
+                <input type="text" matInput formControlName="username" placeholder="Login">
+            </mat-form-field><br>
+            <mat-form-field>
+                <input type="password" matInput formControlName="password" placeholder="Paswoord">
+            </mat-form-field>
+        </div>   
+        </mat-card-content>
+        <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="login()" class="text-upper">LOGIN</button>
+          </mat-card-actions>
+    </mat-card>
 </div>
+</form>
+<!-- </div> -->

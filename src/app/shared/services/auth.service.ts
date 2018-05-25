@@ -1,15 +1,29 @@
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ErrorService } from './error.service';
+import { Observable } from 'rxjs/Observable';
+import { environment } from './../../../environments/environment';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { User } from './../models/user.model';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt/';
-import {shareReplay} from 'rxjs/operators/shareReplay';
+import { of } from 'rxjs/observable/of';
+import { shareReplay, tap, catchError } from 'rxjs/operators';
 
 
 const helper = new JwtHelperService();
 
 @Injectable()
 export class AuthService {
-    constructor(private http: HttpClient) { }
+    
+
+
+    authUrl = environment.apiUrl + '/interim/api-token-auth/';
+    authRefreshUrl = environment.apiUrl + '/interim/api-token-refresh/';
+    constructor(
+        private http: HttpClient,
+        private errorService: ErrorService,
+        private router: Router,
+    ) { }
 
     public getToken(): string {
         return localStorage.getItem('token');
@@ -25,35 +39,33 @@ export class AuthService {
     }
 
     public login(username: string, password: string) {
-        return this.http.post<any>('/interim/api-token-auth/', { username, password })
-            .do(res => this.addTokens(res.access, res.refresh))
-            .shareReplay();
+        return this.http.post<any>(this.authUrl, { username, password }).pipe(
+            tap((res) => {this.addTokens(res.access, res.refresh)}),
+            catchError(this.errorService.handleError('login', {})),
+            shareReplay(),
+        );
     }
 
-    public refreshToken() {
+
+    public refreshToken(): Observable<any> {
         const refresh = this.getRefreshToken();
-        console.log('refreshtoken');
-        console.log(helper.getTokenExpirationDate(refresh));
-        console.log(refresh);
-        return this.http.post<any>('/interim/api-token-refresh/', { refresh })
-            .shareReplay();
+        return this.http.post<any>(this.authRefreshUrl, { refresh }).pipe(
+            // tap((res)=>console.log(res)),
+            shareReplay());
     }
 
     public isAuthenticated(): boolean {
         const token = this.getToken();
         const refreshToken = this.getRefreshToken();
-        // if token is expired check te refreshtoken
+        const auth =  helper.isTokenExpired(token) ? helper.isTokenExpired(refreshToken) ? false : true : true;
+        if (!auth) this.router.navigate(['login'])
         return helper.isTokenExpired(token) ? helper.isTokenExpired(refreshToken) ? false : true : true;
     }
 
     public hasRefreshToken(): boolean {
         const refreshToken = this.getRefreshToken();
-        console.log('has refresh token' + refreshToken.length);
-        console.log(helper.getTokenExpirationDate(refreshToken));
         return refreshToken.length > 0 ? true : false;
     }
-
-
 
     public getHeaderAuthorization(): string {
         return 'Bearer ' + this.getToken();

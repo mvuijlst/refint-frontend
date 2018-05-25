@@ -1,0 +1,120 @@
+<mat-toolbar color="primary">
+    Boodschap [type : {{message.job ? 'Job' : message.event? 'Event' : 'Andere'}}]
+    <span flex></span>
+    <button mat-icon-button (click)="closeMe()">
+        <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div *tdLoading="'overlayStarSyntax'; mode:'indeterminate'; type:'circle'; strategy:'overlay'; color:'primary'; until:!sendingMessage">
+      <mat-card *ngIf="message">
+  <mat-card-title>{{message.subject}}</mat-card-title>
+  <mat-card-subtitle>
+    aangemaakt door : {{message.created_by}} op : {{message.created | date : 'dd/MM/yyyy'}}<br>
+    SMS : {{smsCount}} Mail : {{mailCount}}
+    <div>
+    <mat-list>
+        <mat-list-item>
+        <h3 matLine>SMS : <span class="text-md">{{message.infolink_sms? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_sms? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</span></h3>
+        <p matLine> {{message.message_sms? message.message_sms : 'geen SMS'}} </p>
+        <!-- <p matLine> {{message.infolink_sms? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_sms? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</p> -->
+      </mat-list-item>
+      <mat-divider [inset]="true"></mat-divider>
+      <mat-list-item>
+          <h3 matLine>Mail : <span class="text-md">{{message.infolink_mail? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_mail? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</span></h3>
+          <p matLine> {{message.message_mail ? message.message_mail : 'geen mail'}} </p>
+          <!-- <p matLine> {{message.infolink_mail? 'info link : Ja' : 'info link : Neen'}} | {{message.confirmlink_mail? 'ja-neen optie : Ja' : 'ja-neen optie : Neen'}}</p> -->
+        </mat-list-item>
+      </mat-list>
+    </div>
+</mat-card-subtitle>
+  <mat-card-content>
+    <mat-list>
+        <!-- <div>
+            <h3>Bericht :  {{message.subject}}</h3>
+            <mat-list-item>
+              <h3 matLine>SMS :</h3>
+              <p matLine> {{message.message_sms}} </p>
+            </mat-list-item>
+            <mat-divider [inset]="true"></mat-divider>
+            <mat-list-item>
+                <h3 matLine>Mail :</h3>
+                <p matLine> {{message.message_mail}} </p>
+              </mat-list-item>
+              <mat-divider [inset]="true"></mat-divider>
+            <mat-list-item>
+              <h3 matLine> Soort Job : {{message.job.jobType.name }}</h3>
+              <p matLine> {{message.job.description}} </p>
+            </mat-list-item>
+            <mat-divider [inset]="true"></mat-divider>
+          </div> -->
+          <div *ngIf="message.job">
+        <h3>Job :  {{message.job.name}}</h3>
+        <mat-list-item>
+          <h3 matLine>Locatie : {{message.job.location.name}}</h3>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-list-item>
+          <h3 matLine> Datum : {{message.job.datefrom | date : 'dd/MM/yyyy' }} tot {{message.job.dateuntil | date : 'dd/MM/yyyy' }}</h3>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-list-item>
+          <h3 matLine> Soort Job : {{message.job.jobType.name }}</h3>
+          <p matLine> {{message.job.description}} </p>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+      </div>
+      <div *ngIf="message.event">
+        <h3>
+          Event :  {{message.event.name}}
+        </h3>
+        <mat-list-item>
+          <h3 matLine>Locatie : {{message.event.location.name}}</h3>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-list-item>
+          <h3 matLine> Datum : {{message.event.dateFrom | date : 'dd/MM/yyyy' }}</h3>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-list-item>
+          <h3 matLine> Soort Event : {{message.event.description }}</h3>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+      </div>
+      <div *ngIf="saveResponse">
+          <h3>
+              Bericht Verzonden
+          </h3>
+          <mat-list-item>
+            <h3 matLine>SMS</h3>
+            <p matLine>OK : {{saveResponse.smscount}} | Not OK : {{saveResponse.smsfail}}</p>
+          </mat-list-item>
+          <mat-divider [inset]="true"></mat-divider>
+          <mat-list-item>
+              <h3 matLine>Mail</h3>
+              <p matLine>OK : {{saveResponse.mailcount}} | Not OK : {{saveResponse.mailfail}}</p>
+            </mat-list-item>
+          </div>
+      </mat-list>
+          <!-- <mat-grid-tile>
+            <mat-list>
+                <div>
+                    <h3>
+                       Bericht  {{message.subject ? ' : ' + message.subject : ''}}
+                    </h3>
+                    <mat-list-item>
+                        <h3 matLine>{{messageLog.messageType === 'sms' ? messageLog.message.message_sms : messageLog.message.message_mail}}</h3>
+                    </mat-list-item>
+                    <mat-divider [inset]="true"></mat-divider>
+                  </div>
+                  </mat-list>
+          </mat-grid-tile> -->
+  </mat-card-content>
+  <mat-card-actions>
+      <button mat-raised-button 
+          (click)="sendMsg()" 
+          [disabled]="sendbutDisabled"
+          class="text-upper">Verzend</button>
+    
+  </mat-card-actions>
+</mat-card>
+</div>

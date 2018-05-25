@@ -1,0 +1,96 @@
+    .progressbar li.fail {
+        color: red;
+       }
+    
+.progresslabel{
+    max-width: 50%;
+}
+.progresscontainer {
+    // height: 50px;
+    // margin-top: 100px;
+   }
+.progressbar {
+   counter-reset: step; 
+}
+.progressbar li{
+  list-style-type: none; 
+  float: left; 
+  width: 50px; 
+  position:relative; 
+  text-align: center;
+}
+.progressbar li.email:before {
+    content: "email"; 
+}
+.progressbar li.pageview:before {
+    content: "pageview"; 
+}
+.progressbar li.thumb_up:before {
+    content: "thumb_up"; 
+}
+.progressbar li.comment:before {
+    content: "comment"; 
+}
+.progressbar li.done_all:before {
+    content: "done_all"; 
+}
+.progressbar li.chat_bubble_outline:before {
+    content: "chat_bubble_outline   "; 
+}
+.progressbar li.sms:before {
+    content: "sms"; 
+}
+.progressbar li.sms_fail:before {
+    content: "sms_failed"; 
+}
+// .progressbar li.sent, li.read, li.yes{
+//     color:#27ae60;
+//    }
+.progressbar li.fail {
+    color:#e53935;
+   }
+.progressbar li.fail:before {
+   border-color: #e53935;
+   color : #e53935;
+}
+.progressbar li:before {
+   /* CSS for creating steper block before the li item*/
+    font-family: "Material Icons";
+    font-size:14px;
+    background-repeat: no-repeat;
+    background-position: 0px;
+    counter-increment: step; 
+    height:20px;
+    width:20px; 
+    line-height: 20px; 
+    border: 1px solid #ddd; 
+    display:block; 
+    text-align: center;
+    margin: 0 auto 10px auto; 
+    border-radius: 50%; 
+    background-color: white; 
+    border-color:#27ae60;
+    color:#27ae60;
+}
+.progressbar li:after {
+    /* CSS for creating horizontal line*/
+     content:"";
+     position: absolute; 
+     width:33px;
+     height:1px;
+     background-color: #ddd;
+     top: 10px; 
+     left: 36px; 
+    }
+    .progressbar li:last-child:after {
+     content:none;
+    }
+.progressbar li.active {
+    color:#27ae60;
+   }
+   .progressbar li.active:before {
+    border-color:#27ae60;
+   }
+   .progressbar li.active + li:after{
+    background-color:#27ae60; 
+   }

@@ -1,0 +1,23 @@
+    <form [formGroup] = "form">
+      <div *ngIf="msgLogDetail.messageLogDetailType.shortname === 'yes'" class="pad-md">
+        Bedankt!<br><br>
+        We contacteren jou snel!
+      </div>
+      <div *ngIf="msgLogDetail.messageLogDetailType.shortname === 'no'" class="pad-md">
+        Jammer!<br><br>
+        Misschien een volgende keer!
+  
+      </div>
+      <div class="pad-md" *ngIf="!messageSaved">
+        <div>
+        <span flex>heb je nog vragen of opmerkingen?</span>
+        </div>
+        <div>
+        <textarea class="txtarea" formControlName="boodschap"></textarea> 
+      </div>
+      <div>
+        <button mat-raised-button color="primary" class="text-upper" (click)="saveComment()" >Verstuur</button>
+        
+</div>        
+      </div>
+    </form>

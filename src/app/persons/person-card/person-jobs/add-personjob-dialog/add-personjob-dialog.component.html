@@ -1,0 +1,39 @@
+<form [formGroup]="personjobForm">
+    <h3 mat-dialog-title>Bevestig Job</h3>
+    <h4>Job : {{this.data.job.name}} </h4>
+    <h4 *ngIf="this.data.personname" >Persoon : {{this.data.personname}}</h4>
+    <mat-dialog-content>
+      <div>
+        <mat-form-field>
+            <input matInput 
+              [matDatepicker]="datefrompicker" 
+              formControlName="datefrom"
+              placeholder="Begindatum"
+            >
+            <mat-datepicker-toggle matSuffix [for]="datefrompicker"></mat-datepicker-toggle>
+            <mat-datepicker #datefrompicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput 
+              formControlName="dateuntil"
+              [matDatepicker]="dateuntilpicker" placeholder="Einddatum"
+              >
+            <mat-datepicker-toggle matSuffix [for]="dateuntilpicker"></mat-datepicker-toggle>
+            <mat-datepicker #dateuntilpicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div>
+            <mat-form-field [style.width.%]="100">
+                <textarea matInput matTextareaAutosize matAutosizeMinRows="5"
+                matAutosizeMaxRows="15" placeholder="Commentaar"
+                name="Commentaar"
+                formControlName="comment"
+                ></textarea> 
+              </mat-form-field>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-raised-button (click)="confirmJob()">Opslaan</button>
+        <button mat-raised-button mat-dialog-close>annuleren</button>
+    </mat-dialog-actions>
+</form>

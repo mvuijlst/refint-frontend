@@ -1,0 +1,43 @@
+<td-expansion-panel-group *ngIf="hasRemarks">
+    <td-expansion-panel class="expPanel" [expand]="false" [label]="'Opmerkingen'">
+      <app-remarks [subject]="'jobs'"></app-remarks>
+    </td-expansion-panel>
+</td-expansion-panel-group>
+
+<td-expansion-panel-group *ngIf="person && personJobs.length>0">
+  <td-expansion-panel *ngFor="let job of personJobs" class="expPanel" [expand]="true" >
+    <ng-template td-expansion-panel-label>
+      <mat-icon color="primary" [style.color]="checkDate(job)">{{job.id ? 'build' : 'message'}}</mat-icon>
+      <span class="jobexptitle">{{job.job.name}}</span>
+    </ng-template>          
+    <ng-template td-expansion-panel-sublabel>
+      <span>{{job.job.datefrom | date:'dd/MM/yyyy'}}</span>
+      <span *ngIf="job.job.dateuntil"> - {{job.job.dateuntil | date:'dd/MM/yyyy'}}</span>
+      <span> - {{job.job.location.name}}</span>
+    </ng-template>
+    <div *ngIf="job.datefrom || job.comments" layout="row">
+      <div class="detailtable">
+        <div class="detailtablerow">
+          <div class="detailtablecell" *ngIf="job.comments"><strong>Comments</strong></div>
+          <div class="detailtablecell" *ngIf="job.comments" style="width:50%">{{job.comments}}</div>
+          <div class="detailtablecell" *ngIf="job.datefrom"><strong>Van</strong></div>
+          <div class="detailtablecell" *ngIf="job.datefrom">{{job.datefrom | date:'dd/MM/yyyy'}}</div>
+          <div class="detailtablecell" *ngIf="job.dateuntil"><strong>tot</strong></div>
+          <div class="detailtablecell" *ngIf="job.dateuntil">{{job.dateuntil | date:'dd/MM/yyyy'}}</div>
+        </div>
+      </div>
+    </div>
+    <div *ngFor="let msg of job.messages" class="progesswrapper" layout="row">
+      <span class="progresslabel">{{msg.subject}} [{{msg.created | date:"dd/MM HH:mm:ss"}}]</span>
+      <app-message-stepper [details]="msg.details" flex></app-message-stepper>
+      <span>
+        <button mat-icon-button color="primary" (click)="showAddDetail(msg)" aria-label="voeg commentaar toe" matTooltip="voeg commentaar toe">
+          <mat-icon>add_comment</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" (click)="showAddPersonJob(msg)" aria-label="bevestig job" matTooltip="bevestig job" *ngIf="!job.id">
+          <mat-icon>check_circle_outline</mat-icon>
+        </button>
+      </span>
+    </div>
+  </td-expansion-panel>
+</td-expansion-panel-group>
